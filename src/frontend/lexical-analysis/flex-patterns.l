@@ -4,6 +4,7 @@
 
 %}
 
+EXP ([Ee][-+]?[0-9]+)
 /* Obliga a crear una regla explícita para manejar lexemas desconocidos. */
 %option nodefault
 
@@ -28,6 +29,8 @@ whitespace		[ \f\n\r\t\v]
 <COMMENT>{endline}							{ ; }
 <COMMENT>"*/"								{ EndCommentPatternAction(); BEGIN(INITIAL); }
 
+"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
+"CREATE"                                    { return CreateOperatorPatternAction(yytext);}
 "+"											{ return AdditionOperatorPatternAction(yytext); }
 "-"											{ return SubtractionOperatorPatternAction(yytext); }
 "*"											{ return MultiplicationOperatorPatternAction(yytext); }
@@ -35,6 +38,19 @@ whitespace		[ \f\n\r\t\v]
 
 "("											{ return OpenParenthesisPatternAction(yytext); }
 ")"											{ return CloseParenthesisPatternAction(yytext); }
+
+"{"                                         { ECHO; return LCURLY; }
+"}"                                         { ECHO; return RCURLY; }
+"["                                         { ECHO; return LBRAC; }
+"]"                                         { ECHO; return RBRAC; }
+","                                         { ECHO; return COMMA; }
+":"                                         { ECHO; return COLON; }
+"true"                                      { ECHO; return VTRUE; }
+"false"                                     { ECHO; return VFALSE; }
+"null"                                      { ECHO; return VNULL; }
+[ \t\r\n]+                                  { /* eat whitespace */ }
+\"[^"]*\"                                   { yylval.string = strdup(yytext); ECHO; return STRING; }
+[1-9]+\.?[0-9]*{EXP}?                       { ECHO; yylval.decimal = atof(yytext); return DECIMAL; }
 
 {digit}+									{ return IntegerPatternAction(yytext, yyleng); }
 

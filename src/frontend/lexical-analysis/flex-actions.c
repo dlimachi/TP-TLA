@@ -26,6 +26,18 @@ void EndCommentPatternAction() {
 	LogDebug("EndCommentPatternAction.");
 }
 
+token CreateOperatorPatternAction(const char * lexeme) {
+	LogDebug("CreateOperatorPatternAction: '%s'.", lexeme);
+	yylval.token = CREATE;
+	return CREATE;
+}
+
+token InsertIntoOperatorPatternAction(const char * lexeme) {
+	LogDebug("InsertIntoOperatorPatternAction: '%s'.", lexeme);
+	yylval.token = INSERT_INTO;
+	return INSERT_INTO;
+}
+
 token AdditionOperatorPatternAction(const char * lexeme) {
 	LogDebug("AdditionOperatorPatternAction: '%s'.", lexeme);
 	yylval.token = ADD;
