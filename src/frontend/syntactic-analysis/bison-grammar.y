@@ -36,27 +36,37 @@
 %token <token> SUB
 %token <token> MUL
 %token <token> DIV
+
+%token <token> AS
+
+
+/* IDS y tipos de los tokens terminales generados desde Flex */
 %token <token> INSERT_INTO
 %token <token> CREATE
-%token LCURLY RCURLY LBRAC RBRAC COMMA COLON
+%token <token> DELETE
+%token <token> FROM
+%token <token> IN
+%token <token> WHERE
+%token LCURLY RCURLY LBRAC RBRAC COMMA COLON //CLOSE_PARENTHESIS OPEN_PARENTHESIS
 %token VTRUE VFALSE VNULL
 %token <string> STRING;
 %token <decimal> DECIMAL;
-
+%token <token> EQUAL;
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
-
 %token <token> OPEN_LLAVE
 %token <token> CLOSE_LLAVE
-
 %token <integer> INTEGER
 %token <char> CHARS
 
-// Tipos de dato para los no-terminales generados desde Bison.
+/* Tipos de dato para los no-terminales generados desde Bison */
 %type <program> program
 %type <expression> expression
 %type <factor> factor
 %type <constant> constant
+
+%type <delete_statement> delete_statement
+
 
 // Reglas de asociatividad y precedencia (de menor a mayor).
 %left ADD SUB
@@ -67,37 +77,33 @@
 
 %%
 
-insert_body: chars
-	| value
-	| OPEN_LLAVE
-	| array
-	| CLOSE_LLAVE
-	;	
+
+/* Delete statement */
+
+delete_statement: DELETE FROM STRING WHERE STRING EQUAL STRING
+	| DELETE FROM STRING WHERE STRING EQUAL DECIMAL
+	| DELETE IN STRING LCURLY pairs RCURLY
+	| DELETE FROM
+
 
 program: expression													{ $$ = ProgramGrammarAction($1); }
 	;
 
-
-// INSERT INTO "XXX" {
-//	("name":"Bob", "email":"bob32@gmail.com"), 
-// }
-
-create clientes_banco{
-    (codigo, unique dni) as integer,
-	id as string
-}
 
 create_body: CREATE STRING LCURLY statements RCURLY
 
 statements: statements COMMA statement
 	| statement
 	
-statement: ( columns ) AS type
-	| 	STRING as type
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS type
+	| 	STRING AS type
 
 columns: columns COMMA column
 	|	column
 
+column: STRING
+
+type: STRING
 
 
 insert_body: INSERT_INTO STRING LCURLY objects RCURLY

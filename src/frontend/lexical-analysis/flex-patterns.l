@@ -22,6 +22,15 @@ digit			[0-9]
 endline			[\n]
 whitespace		[ \f\n\r\t\v]
 
+
+DELETE          "DELETE"
+IN              "IN"
+FROM            "FROM"
+WHERE           "WHERE"
+
+INSERT_INTO     "INSERT INTO"
+CREATE          "CREATE"
+
 %%
 
 "/*"										{ BEGIN(COMMENT); BeginCommentPatternAction(); }
@@ -29,8 +38,7 @@ whitespace		[ \f\n\r\t\v]
 <COMMENT>{endline}							{ ; }
 <COMMENT>"*/"								{ EndCommentPatternAction(); BEGIN(INITIAL); }
 
-"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
-"CREATE"                                    { return CreateOperatorPatternAction(yytext);}
+
 "+"											{ return AdditionOperatorPatternAction(yytext); }
 "-"											{ return SubtractionOperatorPatternAction(yytext); }
 "*"											{ return MultiplicationOperatorPatternAction(yytext); }
@@ -39,6 +47,15 @@ whitespace		[ \f\n\r\t\v]
 "("											{ return OpenParenthesisPatternAction(yytext); }
 ")"											{ return CloseParenthesisPatternAction(yytext); }
 
+{INSERT_INTO}                               { return InsertIntoOperatorPatternAction(yytext) ;}
+{CREATE}                                    { return CreateOperatorPatternAction(yytext);}
+
+{DELETE}                                    {ECHO; yylval.token = DELETE; return DELETE;}
+{IN}                                        {ECHO; yylval.token = IN; return IN;}
+{FROM}                                      {ECHO; yylval.token = FROM; return FROM;}
+{WHERE}                                     {ECHO; yylval.token = WHERE; return WHERE;}
+
+"="                                         { ECHO; return EQUAL; }
 "{"                                         { ECHO; return LCURLY; }
 "}"                                         { ECHO; return RCURLY; }
 "["                                         { ECHO; return LBRAC; }
@@ -52,10 +69,12 @@ whitespace		[ \f\n\r\t\v]
 \"[^"]*\"                                   { yylval.string = strdup(yytext); ECHO; return STRING; }
 [1-9]+\.?[0-9]*{EXP}?                       { ECHO; yylval.decimal = atof(yytext); return DECIMAL; }
 
+
 {digit}+									{ return IntegerPatternAction(yytext, yyleng); }
 
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
 
 .											{ return UnknownPatternAction(yytext, yyleng); }
+
 
 %%

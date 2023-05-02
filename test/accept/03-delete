@@ -1,0 +1,1 @@
+DELETE in employees {"email":"jai@gmail.com"}

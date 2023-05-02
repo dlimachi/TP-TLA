@@ -1,0 +1,6 @@
+create clientes_banco using key codigo {
+    (codigo, unique dni) as integer
+    (nombre, direccion) as string
+    (telefono) as string?
+    (género) as enum (FEMALE, MALE)
+}
