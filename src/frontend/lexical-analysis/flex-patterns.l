@@ -39,21 +39,22 @@ whitespace		[ \f\n\r\t\v]
 "("											{ return OpenParenthesisPatternAction(yytext); }
 ")"											{ return CloseParenthesisPatternAction(yytext); }
 
-"{"                                         { ECHO; return LCURLY; }
-"}"                                         { ECHO; return RCURLY; }
-"["                                         { ECHO; return LBRAC; }
-"]"                                         { ECHO; return RBRAC; }
-","                                         { ECHO; return COMMA; }
-":"                                         { ECHO; return COLON; }
-"true"                                      { ECHO; return VTRUE; }
-"false"                                     { ECHO; return VFALSE; }
-"null"                                      { ECHO; return VNULL; }
-[ \t\r\n]+                                  { /* eat whitespace */ }
-\"[^"]*\"                                   { yylval.string = strdup(yytext); ECHO; return STRING; }
-[1-9]+\.?[0-9]*{EXP}?                       { ECHO; yylval.decimal = atof(yytext); return DECIMAL; }
+"{"                                         {  return LCURLY; }
+"}"                                         {  return RCURLY; }
+"["                                         { return LBRAC; }
+"]"                                         { return RBRAC; }
+","                                         { return COMMA; }
+":"                                         {  return COLON; }
+"true"                                      {  return VTRUE; }
+"false"                                     {  return VFALSE; }
+"null"                                      {  return VNULL; }
+\"[^"]*\"                                   { yylval.string = strdup(yytext); return STRING; }
+-?[0-9]+(\.[0-9]+)?                         { yylval.decimal = atof(yytext); return DECIMAL; }
+[a-zA-Z_][a-zA-Z0-9_]{0,127}                { yylval.string = strdup(yytext); ECHO; return TABLE_NAME;}
+
 
 {digit}+									{ return IntegerPatternAction(yytext, yyleng); }
-
+"."                                         { return DOT; }
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
 
 .											{ return UnknownPatternAction(yytext, yyleng); }

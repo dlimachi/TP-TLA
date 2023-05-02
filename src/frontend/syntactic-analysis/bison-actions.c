@@ -47,6 +47,12 @@ int ProgramGrammarAction(const int value) {
 	return value;
 }
 
+int return0() {
+	LogDebug("bien");
+	state.succeed = true;
+	return 0;
+}
+
 int AdditionExpressionGrammarAction(const int leftValue, const int rightValue) {
 	LogDebug("\tAdditionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
 	return Add(leftValue, rightValue);

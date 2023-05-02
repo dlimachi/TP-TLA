@@ -21,6 +21,7 @@
 	int factor;
 	int constant;
 	int INSERT_INTO;
+	int TABLE_NAME;
 
 	// Terminales.
 	token token;
@@ -37,6 +38,7 @@
 %token <token> MUL
 %token <token> DIV
 %token <token> INSERT_INTO
+%token <token> TABLE_NAME
 %token <token> CREATE
 %token LCURLY RCURLY LBRAC RBRAC COMMA COLON
 %token VTRUE VFALSE VNULL
@@ -66,99 +68,29 @@
 %start program
 
 %%
-
-insert_body: chars
-	| value
-	| OPEN_LLAVE
-	| array
-	| CLOSE_LLAVE
-	;	
-
-program: expression													{ $$ = ProgramGrammarAction($1); }
+program: insert_body	{$$ = return0();}
 	;
 
 
-// INSERT INTO "XXX" {
-//	("name":"Bob", "email":"bob32@gmail.com"), 
-// }
+insert_body: INSERT_INTO TABLE_NAME LCURLY objects RCURLY
+	;
 
-create clientes_banco{
-    (codigo, unique dni) as integer,
-	id as string
-}
-
-create_body: CREATE STRING LCURLY statements RCURLY
-
-statements: statements COMMA statement
-	| statement
-	
-statement: ( columns ) AS type
-	| 	STRING as type
-
-columns: columns COMMA column
-	|	column
-
-
-
-insert_body: INSERT_INTO STRING LCURLY objects RCURLY
-
-objects: objects COMMA object
-	|	object
+objects: object
+	|	objects COMMA object
+	;
 
 object:	LCURLY pairs RCURLY
+	;
 
-pairs: pairs COMMA pair
-	|	pair
+pairs: pair
+	|	pairs COMMA pair	
+	;
 
 pair: STRING COLON STRING
-
-
-expression: expression[left] ADD expression[right]					{ $$ = AdditionExpressionGrammarAction($left, $right); }
-	| expression[left] SUB expression[right]						{ $$ = SubtractionExpressionGrammarAction($left, $right); }
-	| expression[left] MUL expression[right]						{ $$ = MultiplicationExpressionGrammarAction($left, $right); }
-	| expression[left] DIV expression[right]						{ $$ = DivisionExpressionGrammarAction($left, $right); }
-	| factor														{ $$ = FactorExpressionGrammarAction($1); }
-	| INSERT_INTO
-	| json
+	|	STRING COLON DECIMAL
+	|	STRING COLON VTRUE
+	|	STRING COLON VFALSE
+	|	STRING COLON VNULL
 	;
-
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorGrammarAction($2); }
-	| constant														{ $$ = ConstantFactorGrammarAction($1); }
-	;
-
-constant: INTEGER													{ $$ = IntegerConstantGrammarAction($1); }
-	;
-
-json:
-    | value
-    ;
-
-value: object
-     | STRING
-     | DECIMAL
-     | array
-     | VTRUE
-     | VFALSE
-     | VNULL
-     ;
-
-object: LCURLY RCURLY
-      | LCURLY members RCURLY
-      ;
-
-members: member
-       | members COMMA member
-       ;
-
-member: STRING COLON value
-      ;
-
-array: LBRAC RBRAC
-     | LBRAC values RBRAC
-     ;
-
-values: value
-      | values COMMA value
-      ;
 
 %%
