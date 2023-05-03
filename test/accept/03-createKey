@@ -1,0 +1,4 @@
+CREATE clientes_table using key codigo {
+    (codigo, unique dni) as integer
+}
+
