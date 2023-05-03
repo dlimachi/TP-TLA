@@ -29,8 +29,8 @@ whitespace		[ \f\n\r\t\v]
 <COMMENT>{endline}							{ ; }
 <COMMENT>"*/"								{ EndCommentPatternAction(); BEGIN(INITIAL); }
 
-"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
-"CREATE"                                    { return CreateOperatorPatternAction(yytext);}
+{digit}+									{ return IntegerPatternAction(yytext, yyleng); }
+
 "+"											{ return AdditionOperatorPatternAction(yytext); }
 "-"											{ return SubtractionOperatorPatternAction(yytext); }
 "*"											{ return MultiplicationOperatorPatternAction(yytext); }
@@ -39,23 +39,35 @@ whitespace		[ \f\n\r\t\v]
 "("											{ return OpenParenthesisPatternAction(yytext); }
 ")"											{ return CloseParenthesisPatternAction(yytext); }
 
-"{"                                         {  return LCURLY; }
-"}"                                         {  return RCURLY; }
-"["                                         { return LBRAC; }
-"]"                                         { return RBRAC; }
-","                                         { return COMMA; }
-":"                                         {  return COLON; }
+"="                                         { return EqualOperatorPatternAction(yytext); }
+";"                                         { return SemicolonPatternAction(yytext); }
+"{"                                         { return OpenCurlyBracketsPatternAction(yytext); }
+"}"                                         { return CloseCurlyBracketsPatternAction(yytext); }
+"["                                         { return OpenBracketsPatternAction(yytext); }
+"]"                                         { return CloseBracketsPatternAction(yytext); }
+","                                         { return CommaPatternAction(yytext); }
+":"                                         { return ColonPatternAction(yytext); }
+
 "true"                                      {  return VTRUE; }
 "false"                                     {  return VFALSE; }
 "null"                                      {  return VNULL; }
-\"[^"]*\"                                   { yylval.string = strdup(yytext); return STRING; }
--?[0-9]+(\.[0-9]+)?                         { yylval.decimal = atof(yytext); return DECIMAL; }
-[a-zA-Z_][a-zA-Z0-9_]{0,127}                { yylval.string = strdup(yytext); ECHO; return TABLE_NAME;}
 
-
-{digit}+									{ return IntegerPatternAction(yytext, yyleng); }
-"."                                         { return DOT; }
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
+
+
+"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
+"CREATE"                                    { return CreateOperatorPatternAction(yytext);}
+"AS"                                        { return AsOperatorPatternAction(yytext); }
+"KEY"                                       { return KEY; }
+"USING"                                     { return USING; }
+"DELETE"                                    { return DELETE; }
+"WHERE"                                     { return WHERE; }
+"FROM"                                      { return FROM; }
+"UNIQUE"                                    { return UNIQUE; }
+
+\"[^"]*\"                                   {  yylval.string = strdup(yytext); return STRING; }
+-?[0-9]+(\.[0-9]+)?                         {  yylval.decimal = atof(yytext); return DECIMAL; }
+[a-zA-Z_][a-zA-Z0-9_]{0,127}                {  yylval.string = strdup(yytext); ECHO; return TC_NAME;}
 
 .											{ return UnknownPatternAction(yytext, yyleng); }
 
