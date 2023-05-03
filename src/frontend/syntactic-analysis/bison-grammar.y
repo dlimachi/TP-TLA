@@ -17,12 +17,10 @@
 
 	// No-terminales (frontend).
 	int program;
-	int expression;
-	int factor;
-	int constant;
 	int INSERT_INTO;
 	int TABLE_NAME;
-	int CREATE
+	int CREATE;
+	
 
 	// Terminales.
 	token token;
@@ -40,16 +38,12 @@
 %token <token> DIV
 %token <token> INSERT_INTO
 %token <token> TABLE_NAME
+%token <token> DOT
 %token <token> CREATE
-%token LCURLY RCURLY LBRAC RBRAC COMMA COLON
-%token VTRUE VFALSE VNULL
-%token <string> STRING;
-%token <decimal> DECIMAL;
-
 %token <token> TYPE
-%token <token> USING KEY
 %token <token> AS
-
+%token <token> KEY
+%token <token> USING
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -57,14 +51,25 @@
 %token <token> OPEN_LLAVE
 %token <token> CLOSE_LLAVE
 
-%token <integer> INTEGER
-%token <char> CHARS
+%token <token> LCURLY
+%token <token> RCURLY
+%token <token> LBRAC
+%token <token> RBRAC
+%token <token> COMMA 
+%token <token> COLON
+%token <token> VTRUE 
+%token <token> VFALSE
+%token <token> VNULL
+
+%token <string> STRING;
+%token <decimal> DECIMAL;
+
+%token <integer> INTEGER;
+%token <char> CHARS;
 
 // Tipos de dato para los no-terminales generados desde Bison.
 %type <program> program
-%type <expression> expression
-%type <factor> factor
-%type <constant> constant
+
 
 // Reglas de asociatividad y precedencia (de menor a mayor).
 %left ADD SUB
@@ -74,9 +79,12 @@
 %start program
 
 %%
-program: insert_body	{$$ = return0();}
+program: general 	{$$ = return0();}
 	;
 
+general: insert_body
+	| create_body
+	;
 
 insert_body: INSERT_INTO TABLE_NAME LCURLY objects RCURLY
 	;
@@ -99,13 +107,12 @@ pair: STRING COLON STRING
 	|	STRING COLON VNULL
 	;
 
-%%
 
 create_body: CREATE create_table LCURLY statements RCURLY
 	;
 
 create_table: TABLE_NAME
-	|	USING KEY column
+	|	TABLE_NAME USING KEY column
 	;
 
 statements: statements COMMA statement
