@@ -41,7 +41,6 @@
 %token <token> MUL
 %token <token> DIV
 %token <token> INSERT_INTO
-<<<<<<< HEAD
 %token <token> TC_NAME
 %token <token> DOT
 %token <token> CREATE
@@ -55,15 +54,6 @@
 %token <token> FROM
 %token <token> WHERE
 %token <token> EQUAL
-=======
-%token <token> TABLE_NAME
-%token <token> DOT
-%token <token> CREATE
-%token <token> TYPE
-%token <token> AS
-%token <token> KEY
-%token <token> USING
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -79,19 +69,6 @@
 %token <token> VFALSE
 %token <token> VNULL
 
-<<<<<<< HEAD
-=======
-%token <token> LCURLY
-%token <token> RCURLY
-%token <token> LBRAC
-%token <token> RBRAC
-%token <token> COMMA 
-%token <token> COLON
-%token <token> VTRUE 
-%token <token> VFALSE
-%token <token> VNULL
-
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 %token <string> STRING;
 %token <decimal> DECIMAL;
 
@@ -115,10 +92,7 @@ program: general 	{$$ = return0();}
 
 general: insert_body
 	| create_body
-<<<<<<< HEAD
 	| delete_body
-=======
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 	;
 
 insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY
@@ -146,13 +120,8 @@ pair: STRING COLON STRING
 create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY
 	;
 
-<<<<<<< HEAD
 create_table: TC_NAME
 	|	TC_NAME USING KEY TC_NAME
-=======
-create_table: TABLE_NAME
-	|	TABLE_NAME USING KEY column
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 	;
 
 statements: statements COMMA statement
