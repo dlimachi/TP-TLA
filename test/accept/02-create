@@ -1,3 +1,7 @@
 CREATE clientes_table{
+<<<<<<< HEAD
     codigo AS "integer" 
+=======
+    codigo AS integer 
+>>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 }
