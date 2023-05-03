@@ -22,6 +22,7 @@
 	int constant;
 	int INSERT_INTO;
 	int TABLE_NAME;
+	int CREATE
 
 	// Terminales.
 	token token;
@@ -44,6 +45,7 @@
 %token VTRUE VFALSE VNULL
 %token <string> STRING;
 %token <decimal> DECIMAL;
+%token <token> TYPE
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -94,3 +96,28 @@ pair: STRING COLON STRING
 	;
 
 %%
+
+create_body: CREATE create_table LCURLY statements RCURLY
+	;
+
+create_table: TABLE_NAME
+	|	USING KEY column
+	;
+
+statements: statements COMMA statement
+	|	statement	
+	;
+	
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TYPE
+	| 	STRING AS TYPE
+	;
+
+columns: columns COMMA column
+	|	column
+	;
+
+column: STRING
+	;
+
+%%
+
