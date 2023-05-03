@@ -1,4 +1,4 @@
-CREATE clientes_table using key codigo {
+CREATE clientes_table USING KEY codigo {
     (codigo, unique dni) as integer
 }
 

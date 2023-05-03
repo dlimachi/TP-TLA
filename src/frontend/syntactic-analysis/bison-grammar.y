@@ -45,7 +45,11 @@
 %token VTRUE VFALSE VNULL
 %token <string> STRING;
 %token <decimal> DECIMAL;
+
 %token <token> TYPE
+%token <token> USING KEY
+%token <token> AS
+
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
