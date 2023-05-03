@@ -18,11 +18,7 @@
 	// No-terminales (frontend).
 	int program;
 	int INSERT_INTO;
-<<<<<<< HEAD
 	int TC_NAME;
-=======
-	int TABLE_NAME;
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 	int CREATE;
 	
 
