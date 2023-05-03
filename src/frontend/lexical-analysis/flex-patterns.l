@@ -59,6 +59,7 @@ whitespace		[ \f\n\r\t\v]
 
 
 {digit}+									{ return IntegerPatternAction(yytext, yyleng); }
+
 "."                                         { return DOT; }
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
 
