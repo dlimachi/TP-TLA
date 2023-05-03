@@ -31,6 +31,11 @@ whitespace		[ \f\n\r\t\v]
 
 "INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
 "CREATE"                                    { return CreateOperatorPatternAction(yytext);}
+"TYPE"                                      { return TYPE; }
+"AS"                                        { return AS;}
+"KEY"                                       { return KEY; }
+"USING"                                     { return USING; }
+
 "+"											{ return AdditionOperatorPatternAction(yytext); }
 "-"											{ return SubtractionOperatorPatternAction(yytext); }
 "*"											{ return MultiplicationOperatorPatternAction(yytext); }
@@ -41,16 +46,16 @@ whitespace		[ \f\n\r\t\v]
 
 "{"                                         {  return LCURLY; }
 "}"                                         {  return RCURLY; }
-"["                                         { return LBRAC; }
-"]"                                         { return RBRAC; }
-","                                         { return COMMA; }
+"["                                         {  return LBRAC; }
+"]"                                         {  return RBRAC; }
+","                                         {  return COMMA; }
 ":"                                         {  return COLON; }
 "true"                                      {  return VTRUE; }
 "false"                                     {  return VFALSE; }
 "null"                                      {  return VNULL; }
-\"[^"]*\"                                   { yylval.string = strdup(yytext); return STRING; }
--?[0-9]+(\.[0-9]+)?                         { yylval.decimal = atof(yytext); return DECIMAL; }
-[a-zA-Z_][a-zA-Z0-9_]{0,127}                { yylval.string = strdup(yytext); ECHO; return TABLE_NAME;}
+\"[^"]*\"                                   {  yylval.string = strdup(yytext); return STRING; }
+-?[0-9]+(\.[0-9]+)?                         {  yylval.decimal = atof(yytext); return DECIMAL; }
+[a-zA-Z_][a-zA-Z0-9_]{0,127}                {  yylval.string = strdup(yytext); ECHO; return TABLE_NAME;}
 
 
 {digit}+									{ return IntegerPatternAction(yytext, yyleng); }
