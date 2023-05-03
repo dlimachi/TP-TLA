@@ -17,11 +17,14 @@
 
 	// No-terminales (frontend).
 	int program;
-	int expression;
-	int factor;
-	int constant;
 	int INSERT_INTO;
+<<<<<<< HEAD
+	int TC_NAME;
+=======
 	int TABLE_NAME;
+>>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
+	int CREATE;
+	
 
 	// Terminales.
 	token token;
@@ -38,28 +41,43 @@
 %token <token> MUL
 %token <token> DIV
 %token <token> INSERT_INTO
-%token <token> TABLE_NAME
-%token <token> CREATE
+%token <token> TC_NAME
 %token <token> DOT
-%token LCURLY RCURLY LBRAC RBRAC COMMA COLON
-%token VTRUE VFALSE VNULL
-%token <string> STRING;
-%token <decimal> DECIMAL;
+%token <token> CREATE
+%token <token> AS
+%token <token> KEY
+%token <token> USING
+%token <token> UNIQUE
+
+
+%token <token> DELETE
+%token <token> FROM
+%token <token> WHERE
+%token <token> EQUAL
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
 
-%token <token> OPEN_LLAVE
-%token <token> CLOSE_LLAVE
+%token <token> OPEN_CURLY
+%token <token> CLOSE_CURLY
+%token <token> OPEN_BRACKETS
+%token <token> CLOSE_BRACKETS
+%token <token> COMMA
+%token <token> SEMICOLON
+%token <token> COLON
+%token <token> VTRUE 
+%token <token> VFALSE
+%token <token> VNULL
 
-%token <integer> INTEGER
-%token <char> CHARS
+%token <string> STRING;
+%token <decimal> DECIMAL;
+
+%token <integer> INTEGER;
+%token <char> CHARS;
 
 // Tipos de dato para los no-terminales generados desde Bison.
 %type <program> program
-%type <expression> expression
-%type <factor> factor
-%type <constant> constant
+
 
 // Reglas de asociatividad y precedencia (de menor a mayor).
 %left ADD SUB
@@ -69,18 +87,22 @@
 %start program
 
 %%
-program: insert_body	{$$ = return0();}
+program: general 	{$$ = return0();}
 	;
 
+general: insert_body
+	| create_body
+	| delete_body
+	;
 
-insert_body: INSERT_INTO TABLE_NAME LCURLY objects RCURLY
+insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY
 	;
 
 objects: object
 	|	objects COMMA object
 	;
 
-object:	LCURLY pairs RCURLY
+object:	OPEN_CURLY pairs CLOSE_CURLY
 	;
 
 pairs: pair
@@ -94,4 +116,31 @@ pair: STRING COLON STRING
 	|	STRING COLON VNULL
 	;
 
+
+create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY
+	;
+
+create_table: TC_NAME
+	|	TC_NAME USING KEY TC_NAME
+	;
+
+statements: statements COMMA statement
+	|	statement	
+	;
+	
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS STRING
+	| 	TC_NAME AS STRING
+	;
+
+columns: columns COMMA TC_NAME
+	|	TC_NAME
+	;
+
+
+
+delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING 
+	;
+
+
 %%
+

@@ -26,10 +26,76 @@ void EndCommentPatternAction() {
 	LogDebug("EndCommentPatternAction.");
 }
 
+token OpenParenthesisPatternAction(const char * lexeme) {
+	LogDebug("OpenParenthesisPatternAction: '%s'.", lexeme);
+	yylval.token = OPEN_PARENTHESIS;
+	return OPEN_PARENTHESIS;
+}
+
+token CloseParenthesisPatternAction(const char * lexeme) {
+	LogDebug("CloseParenthesisPatternAction: '%s'.", lexeme);
+	yylval.token = CLOSE_PARENTHESIS;
+	return CLOSE_PARENTHESIS;
+}
+
+token EqualOperatorPatternAction(const char * lexeme){
+	LogDebug("EqualsPatternAction: '%s'.", lexeme);
+	yylval.token = EQUAL;
+	return EQUAL;
+}
+
+token SemicolonPatternAction(const char * lexeme){
+	LogDebug("SemicolonPatternAction: '%s'.", lexeme);
+	yylval.token = SEMICOLON;
+	return SEMICOLON;
+}
+
+token OpenCurlyBracketsPatternAction(const char * lexeme){
+	LogDebug("OpenCurlyBracketsPatternAction: '%s'.", lexeme);
+	yylval.token = OPEN_CURLY;
+	return OPEN_CURLY;
+}
+
+token CloseCurlyBracketsPatternAction(const char * lexeme){
+	LogDebug("CloseCurlyBracketsPatternAction: '%s'.", lexeme);
+	yylval.token = CLOSE_CURLY;
+	return CLOSE_CURLY;
+}
+
+token OpenBracketsPatternAction(const char * lexeme){
+	LogDebug("OpenBracketsPatternAction: '%s'.", lexeme);
+	yylval.token = OPEN_BRACKETS;
+	return OPEN_BRACKETS;
+}
+
+token CloseBracketsPatternAction(const char * lexeme){
+	LogDebug("CloseBracketsPatternAction: '%s'.", lexeme);
+	yylval.token = CLOSE_BRACKETS;
+	return CLOSE_BRACKETS;
+}
+
+token CommaPatternAction(const char * lexeme){
+	LogDebug("CommaPatternAction: '%s'.", lexeme);
+	yylval.token = COMMA;
+	return COMMA;
+}
+
+token ColonPatternAction(const char * lexeme) {
+	LogDebug("ColonPatternAction: '%s'.", lexeme);
+	yylval.token = COLON;
+	return COLON;
+}
+
 token CreateOperatorPatternAction(const char * lexeme) {
 	LogDebug("CreateOperatorPatternAction: '%s'.", lexeme);
 	yylval.token = CREATE;
 	return CREATE;
+}
+
+token AsOperatorPatternAction(const char * lexeme) {
+	LogDebug("AsOperatorPatternAction: '%s'.", lexeme);
+	yylval.token = AS;
+	return AS;
 }
 
 token InsertIntoOperatorPatternAction(const char * lexeme) {
@@ -44,11 +110,7 @@ token AdditionOperatorPatternAction(const char * lexeme) {
 	return ADD;
 }
 
-token CloseParenthesisPatternAction(const char * lexeme) {
-	LogDebug("CloseParenthesisPatternAction: '%s'.", lexeme);
-	yylval.token = CLOSE_PARENTHESIS;
-	return CLOSE_PARENTHESIS;
-}
+
 
 token DivisionOperatorPatternAction(const char * lexeme) {
 	LogDebug("DivisionOperatorPatternAction: '%s'.", lexeme);
@@ -59,19 +121,13 @@ token DivisionOperatorPatternAction(const char * lexeme) {
 token IntegerPatternAction(const char * lexeme, const int length) {
 	LogDebug("IntegerPatternAction: '%s' (length = %d).", lexeme, length);
 	yylval.integer = atoi(lexeme);
-	return INTEGER;
+	return DECIMAL;
 }
 
 token MultiplicationOperatorPatternAction(const char * lexeme) {
 	LogDebug("MultiplicationOperatorPatternAction: '%s'.", lexeme);
 	yylval.token = MUL;
 	return MUL;
-}
-
-token OpenParenthesisPatternAction(const char * lexeme) {
-	LogDebug("OpenParenthesisPatternAction: '%s'.", lexeme);
-	yylval.token = OPEN_PARENTHESIS;
-	return OPEN_PARENTHESIS;
 }
 
 token SubtractionOperatorPatternAction(const char * lexeme) {

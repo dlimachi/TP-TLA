@@ -23,6 +23,23 @@
 void BeginCommentPatternAction();
 void EndCommentPatternAction();
 
+
+
+token OpenParenthesisPatternAction(const char * lexeme);
+token CloseParenthesisPatternAction(const char * lexeme);
+token SemicolonPatternAction(const char * lexeme);
+token OpenCurlyBracketsPatternAction(const char * lexeme);
+token CloseCurlyBracketsPatternAction(const char * lexeme);
+token OpenBracketsPatternAction(const char * lexeme);
+token CloseBracketsPatternAction(const char * lexeme);
+token CommaPatternAction(const char * lexeme);
+token ColonPatternAction(const char * lexeme);
+token CreateOperatorPatternAction(const char * lexeme);
+token AsOperatorPatternAction(const char * lexeme);
+token EqualOperatorPatternAction(const char * lexeme);
+token InsertIntoOperatorPatternAction(const char * lexeme);
+
+
 // Patrones terminales del lenguaje diseñado.
 token CreateOperatorPatternAction(const char * lexeme);
 token InsertIntoOperatorPatternAction(const char * lexeme);
