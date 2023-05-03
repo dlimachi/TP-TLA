@@ -40,6 +40,7 @@
 %token <token> INSERT_INTO
 %token <token> TABLE_NAME
 %token <token> CREATE
+%token <token> DOT
 %token LCURLY RCURLY LBRAC RBRAC COMMA COLON
 %token VTRUE VFALSE VNULL
 %token <string> STRING;
