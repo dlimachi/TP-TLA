@@ -1,1 +1,1 @@
-query queryName ([id, name], nombreTabla, )
+QUERY queryName ([id, name], nombreTabla, condicion)

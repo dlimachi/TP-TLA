@@ -50,6 +50,12 @@
 %token <token> FROM
 %token <token> WHERE
 %token <token> EQUAL
+%token <token> AND
+%token <token> EQ
+%token <token> GT
+%token <token> LT
+%token <token> OR
+%token <token> CHECK
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -90,6 +96,7 @@ general: insert_body
 	| create_body
 	| delete_body
 	| check
+	| query_body
 	;
 
 insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY
@@ -107,6 +114,7 @@ pairs: pair
 	;
 
 pair: STRING COLON STRING
+	|	STRING COLON INTEGER
 	|	STRING COLON DECIMAL
 	|	STRING COLON VTRUE
 	|	STRING COLON VFALSE
@@ -129,8 +137,12 @@ statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS STRING
 	| 	TC_NAME AS STRING
 	;
 
-columns: columns COMMA TC_NAME
-	|	TC_NAME
+columns: columns COMMA column
+	| column
+	;
+
+column: TC_NAME
+	| UNIQUE TC_NAME
 	;
 
 
@@ -139,7 +151,7 @@ delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING
 	;
 
 
-query_body: TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA check CLOSE_PARENTHESIS
+query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS
 	;
 
 request: TC_NAME

@@ -1,1 +1,1 @@
-query queryName (*, nombreTabla, ) 
+QUERY queryName (*, nombreTabla, condicion) 
