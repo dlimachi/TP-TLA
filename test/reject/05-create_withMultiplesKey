@@ -1,0 +1,4 @@
+CREATE clientes_banco USING KEY codigo dni telefono{
+    (codigo, UNIQUE dni) AS integer,
+    (telefono) AS string,
+}
