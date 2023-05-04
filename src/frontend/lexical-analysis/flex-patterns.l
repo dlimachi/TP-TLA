@@ -36,6 +36,10 @@ whitespace		[ \f\n\r\t\v]
 "*"											{ return MultiplicationOperatorPatternAction(yytext); }
 "/"											{ return DivisionOperatorPatternAction(yytext); }
 
+">"                                         { return GT; }
+"<"                                         { return LT; }
+"=="                                        { return EQ; }
+
 "("											{ return OpenParenthesisPatternAction(yytext); }
 ")"											{ return CloseParenthesisPatternAction(yytext); }
 
@@ -54,6 +58,9 @@ whitespace		[ \f\n\r\t\v]
 
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
 
+"CHECK"                                     { return CHECK }
+"AND"                                       { return AND }
+"OR"                                        { return OR }
 
 "INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext); }
 "CREATE"                                    { return CreateOperatorPatternAction(yytext); }
@@ -66,6 +73,7 @@ whitespace		[ \f\n\r\t\v]
 "QUERY"                                     { return QueryOperatorPatternAction(yytext); }
 "*"                                         { return ALL;}
 "!"                                         { return DISTINCT }
+
 
 \"[^"]*\"                                   {  yylval.string = strdup(yytext); return STRING; }
 -?[0-9]+(\.[0-9]+)?                         {  yylval.decimal = atof(yytext); return DECIMAL; }

@@ -1,0 +1,1 @@
+CHECK check1 { var < 100 AND var > 5 }

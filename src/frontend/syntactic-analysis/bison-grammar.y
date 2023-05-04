@@ -89,6 +89,7 @@ program: general 	{$$ = return0();}
 general: insert_body
 	| create_body
 	| delete_body
+	| check
 	;
 
 insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY
@@ -146,6 +147,25 @@ request: TC_NAME
 	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS
 	|	ALL
 	;
+
+
+check:
+    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY
+    ;
+
+check_body:
+    condition
+    | check_body AND condition
+    | check_body OR condition
+    ;
+
+condition:
+    TC_NAME comparison INTEGER
+    | TC_NAME comparison STRING
+	| TC_NAME comparison TC_NAME
+    ;
+
+comparison: GT | LT | EQ ;
 
 
 %%
