@@ -61,6 +61,8 @@ whitespace		[ \f\n\r\t\v]
 "CHECK"                                     { return CHECK; }
 "AND"                                       { return AND; }
 "OR"                                        { return OR; }
+"IN"                                        { return IN; }
+"AS ENUM"                                      { return AS_ENUM; }
 
 "INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext); }
 "CREATE"                                    { return CreateOperatorPatternAction(yytext); }

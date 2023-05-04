@@ -56,6 +56,8 @@
 %token <token> LT
 %token <token> OR
 %token <token> CHECK
+%token <token> IN
+%token <token> AS_ENUM
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -135,7 +137,14 @@ statements: statements COMMA statement
 	
 statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS STRING
 	| 	TC_NAME AS STRING
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
+	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
 	;
+
+enum_types: enum_types COMMA STRING
+	|	STRING
+	;
+
 
 columns: columns COMMA column
 	| column
@@ -147,7 +156,8 @@ column: TC_NAME
 
 
 
-delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING 
+delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING
+	| DELETE FROM TC_NAME object
 	;
 
 

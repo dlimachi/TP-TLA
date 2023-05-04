@@ -1,3 +1,5 @@
 CREATE clientes_table{
-    (codigo, UNIQUE dni) AS "integer"
+    (codigo, UNIQUE dni) AS "integer",
+    phone AS "integer",
+    address AS "string"
 }

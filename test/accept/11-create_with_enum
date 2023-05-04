@@ -1,0 +1,6 @@
+CREATE clientes_banco USING KEY codigo {
+    (codigo, UNIQUE dni) AS "integer",
+    (nombre, direccion) AS "string",
+    (telefono) AS "string",
+    (genero) AS ENUM ("FEMALE", "MALE")
+}
