@@ -54,10 +54,20 @@
 %token <token> EQ
 %token <token> GT
 %token <token> LT
+%token <token> LTEQ
+%token <token> NEQ
+%token <token> GTEQ
 %token <token> OR
 %token <token> CHECK
 %token <token> IN
+%token <token> NULLABLE
+%token <token> ON_DELETE
+%token <token> ON_UPDATE
+%token <token> CASCADE
+%token <token> RESTRICT
+%token <token> SET_NULL
 %token <token> AS_ENUM
+%token <token> WITH
 
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
@@ -82,10 +92,6 @@
 // Tipos de dato para los no-terminales generados desde Bison.
 %type <program> program
 
-
-// Reglas de asociatividad y precedencia (de menor a mayor).
-%left ADD SUB
-%left MUL DIV
 
 // El símbolo inicial de la gramatica.
 %start program
@@ -135,11 +141,25 @@ statements: statements COMMA statement
 	|	statement	
 	;
 	
-statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS STRING
-	| 	TC_NAME AS STRING
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE
+	| 	TC_NAME AS single_type
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options
 	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
 	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
 	;
+
+options: CASCADE
+	|	SET_NULL
+	|	RESTRICT
+
+single_type: TC_NAME
+	|	TC_NAME NULLABLE
+	|	TC_NAME WITH TC_NAME
+	;
+
 
 enum_types: enum_types COMMA STRING
 	|	STRING
@@ -182,13 +202,28 @@ check_body:
     ;
 
 condition:
-    TC_NAME comparison INTEGER
-    | TC_NAME comparison STRING
-	| TC_NAME comparison TC_NAME
+    expression comparison expression
     ;
 
-comparison: GT | LT | EQ ;
+expression:
+    term
+    | expression ADD term
+    | expression SUB term
+    ;
 
+term:
+    factor
+    | term ALL factor
+    | term DIV factor
+    ;
+
+factor:
+    TC_NAME
+    | INTEGER
+    | STRING
+    ;
+
+comparison: GT | LT | EQ | GTEQ | LTEQ | NEQ;
 
 %%
 

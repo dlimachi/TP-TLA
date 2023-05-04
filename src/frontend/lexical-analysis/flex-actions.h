@@ -23,8 +23,7 @@
 void BeginCommentPatternAction();
 void EndCommentPatternAction();
 
-
-
+// Patrones de símbolos y operadores.
 token OpenParenthesisPatternAction(const char * lexeme);
 token CloseParenthesisPatternAction(const char * lexeme);
 token SemicolonPatternAction(const char * lexeme);
@@ -39,19 +38,42 @@ token AsOperatorPatternAction(const char * lexeme);
 token EqualOperatorPatternAction(const char * lexeme);
 token InsertIntoOperatorPatternAction(const char * lexeme);
 
-
 // Patrones terminales del lenguaje diseñado.
-token CreateOperatorPatternAction(const char * lexeme);
-token InsertIntoOperatorPatternAction(const char * lexeme);
-token QueryOperatorPatternAction(const char * lexeme);
-
 token AdditionOperatorPatternAction(const char * lexeme);
-token CloseParenthesisPatternAction(const char * lexeme);
 token DivisionOperatorPatternAction(const char * lexeme);
 token IntegerPatternAction(const char * lexeme, const int length);
 token MultiplicationOperatorPatternAction(const char * lexeme);
-token OpenParenthesisPatternAction(const char * lexeme);
 token SubtractionOperatorPatternAction(const char * lexeme);
+
+token GreaterThanPatternAction(const char *lexeme);
+token LesserThanPatternAction(const char *lexeme);
+token GreaterThanEqualToPatternAction(const char *lexeme);
+token LesserThanEqualToPatternAction(const char *lexeme);
+token EqualToPatternAction(const char *lexeme);
+token NotEqualToPatternAction(const char *lexeme);
+token CheckPatternAction(const char *lexeme);
+token AndPatternAction(const char *lexeme);
+token OrPatternAction(const char *lexeme);
+token InPatternAction(const char *lexeme);
+token AsEnumPatternAction(const char *lexeme);
+token UsingKeyPatternAction(const char *lexeme);
+token DeletePatternAction(const char *lexeme);
+token WherePatternAction(const char *lexeme);
+token FromPatternAction(const char *lexeme);
+token UniquePatternAction(const char *lexeme);
+token QueryOperatorPatternAction(const char *lexeme);
+token OnDeletePatternAction(const char * lexeme);
+token OnUpdatePatternAction(const char *lexeme);
+token CascadePatternAction(const char *lexeme);
+token RestrictPatternAction(const char *lexeme);
+token SetNullPatternAction(const char *lexeme);
+token AllPatternAction(const char *lexeme);
+token DistinctPatternAction(const char *lexeme);
+token WithPatternAction(const char *lexeme);
+token VNullPatternAction(const char *lexeme);
+token VTruePatternAction(const char *lexeme);
+token VFalsePatternAction(const char *lexeme);
+token NullablePatternAction(const char *lexeme);
 
 // Patrón desconocido, permite abortar debido a un error de sintaxis.
 token UnknownPatternAction(const char * lexeme, const int length);
