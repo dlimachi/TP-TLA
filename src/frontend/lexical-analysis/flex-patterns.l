@@ -55,19 +55,21 @@ whitespace		[ \f\n\r\t\v]
 {whitespace}								{ IgnoredPatternAction(yytext, yyleng); }
 
 
-"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext) ;}
-"CREATE"                                    { return CreateOperatorPatternAction(yytext);}
+"INSERT INTO"                               { return InsertIntoOperatorPatternAction(yytext); }
+"CREATE"                                    { return CreateOperatorPatternAction(yytext); }
 "AS"                                        { return AsOperatorPatternAction(yytext); }
-"KEY"                                       { return KEY; }
-"USING"                                     { return USING; }
+"USING KEY"                                 { return USING_KEY; }
 "DELETE"                                    { return DELETE; }
 "WHERE"                                     { return WHERE; }
 "FROM"                                      { return FROM; }
 "UNIQUE"                                    { return UNIQUE; }
+"QUERY"                                     { return QueryOperatorPatternAction(yytext); }
+"*"                                         { return ALL;}
+"!"                                         { return DISTINCT }
 
 \"[^"]*\"                                   {  yylval.string = strdup(yytext); return STRING; }
 -?[0-9]+(\.[0-9]+)?                         {  yylval.decimal = atof(yytext); return DECIMAL; }
-[a-zA-Z_][a-zA-Z0-9_]{0,127}                {  yylval.string = strdup(yytext); ECHO; return TC_NAME;}
+[a-zA-Z_][a-zA-Z0-9_]{0,127}                {  yylval.string = strdup(yytext); ECHO; return TC_NAME; }
 
 .											{ return UnknownPatternAction(yytext, yyleng); }
 

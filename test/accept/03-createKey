@@ -1,8 +1,4 @@
 CREATE clientes_table USING KEY codigo {
-<<<<<<< HEAD
     (codigo, UNIQUE dni) AS "integer"
-=======
-    (codigo, unique dni) AS integer
->>>>>>> c826025f0a154d58a2c1694a370e0f812a49956c
 }
 

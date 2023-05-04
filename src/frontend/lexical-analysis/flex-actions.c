@@ -104,13 +104,19 @@ token InsertIntoOperatorPatternAction(const char * lexeme) {
 	return INSERT_INTO;
 }
 
+token QueryOperatorPatternAction(const char * lexeme) {
+	LogDebug("QueryOperatorPatternAction: '%s'.", lexeme);
+	yylval.token = QUERY;
+	return QUERY;
+}
+
+
+
 token AdditionOperatorPatternAction(const char * lexeme) {
 	LogDebug("AdditionOperatorPatternAction: '%s'.", lexeme);
 	yylval.token = ADD;
 	return ADD;
 }
-
-
 
 token DivisionOperatorPatternAction(const char * lexeme) {
 	LogDebug("DivisionOperatorPatternAction: '%s'.", lexeme);

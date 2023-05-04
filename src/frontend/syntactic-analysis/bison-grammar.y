@@ -41,11 +41,11 @@
 %token <token> DOT
 %token <token> CREATE
 %token <token> AS
-%token <token> KEY
-%token <token> USING
+%token <token> USING_KEY
 %token <token> UNIQUE
-
-
+%token <token> QUERY
+%token <token> ALL
+%token <token> DISTINCT 
 %token <token> DELETE
 %token <token> FROM
 %token <token> WHERE
@@ -117,7 +117,7 @@ create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY
 	;
 
 create_table: TC_NAME
-	|	TC_NAME USING KEY TC_NAME
+	|	TC_NAME USING_KEY TC_NAME
 	;
 
 statements: statements COMMA statement
@@ -135,6 +135,16 @@ columns: columns COMMA TC_NAME
 
 
 delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING 
+	;
+
+
+query_body: TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA check CLOSE_PARENTHESIS
+	;
+
+request: TC_NAME
+	|	OPEN_BRACKETS columns CLOSE_BRACKETS
+	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS
+	|	ALL
 	;
 
 

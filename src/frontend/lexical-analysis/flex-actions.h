@@ -43,6 +43,7 @@ token InsertIntoOperatorPatternAction(const char * lexeme);
 // Patrones terminales del lenguaje diseñado.
 token CreateOperatorPatternAction(const char * lexeme);
 token InsertIntoOperatorPatternAction(const char * lexeme);
+token QueryOperatorPatternAction(const char * lexeme)
 
 token AdditionOperatorPatternAction(const char * lexeme);
 token CloseParenthesisPatternAction(const char * lexeme);
