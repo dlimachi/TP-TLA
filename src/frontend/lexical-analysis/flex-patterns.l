@@ -4,7 +4,6 @@
 
 %}
 
-EXP ([Ee][-+]?[0-9]+)
 /* Obliga a crear una regla explícita para manejar lexemas desconocidos. */
 %option nodefault
 
