@@ -6,16 +6,17 @@
 * auto-referenciarse, como es el caso de una "Expression", que está compuesta
 * de otras 2 expresiones.
 */
-typedef struct Expression Expression;
+//typedef struct Expression Expression;
 
 /**
 * Para cada no-terminal se define una nueva estructura que representa su tipo
 * de dato y, por lo tanto, su nodo en el AST (Árbol de Sintaxis Abstracta).
 */
+/*
 typedef struct {
 	int value;
 } Constant;
-
+*/
 /**
 * En caso de que un no-terminal ("Factor" en este caso), posea más de una
 * regla de producción asociada, se crea además de la estructura un enumerado
@@ -25,6 +26,7 @@ typedef struct {
 * De este modo, al recorrer el AST, es posible determinar qué nodos hijos
 * posee según el valor de este enumerado.
 */
+/*
 typedef enum {
 	EXPRESSION,
 	CONSTANT
@@ -52,5 +54,287 @@ struct Expression {
 typedef struct {
 	Expression * expression;
 } Program;
+*/
+
+//A partir de aca voy a poner nuestras cosas
+
+//tipos que se auto-referencian:
+
+typedef struct Objects Objects;
+typedef struct Pairs Pairs;
+typedef struct Statements Statements;
+typedef struct EnumTypes EnumTypes;
+typedef struct Columns Columns;
+typedef struct CheckBody CheckBody;
+typedef struct Expression Expression;
+typedef struct Term Term;
+
+//enums a utilizar
+typedef enum {
+	GT,
+	LT,
+	EQ,
+	GTEQ,
+	LTEQ,
+	NEQ
+} ComparisonType;
+
+typedef enum {
+	TC_NAME,
+	INT,
+	STRING
+} FactorType;
+
+typedef enum {
+	FACTOR,
+	ALL,
+	DIV //para que esta este?
+} TermType;
+
+typedef enum {
+	TERM,
+	ADD,
+	SUB
+} ExpressionType;
+
+typedef enum {
+	CONDITION,
+	AND,
+	OR
+} CheckBodyType;
+
+typedef enum {
+	TC_NAME,
+	COLUMNS,
+	DISTINCT_COLUMNS,
+	ALL
+} RequestType;
+
+typedef enum {
+	WHERE,
+	OBJECT
+} DeleteType;
+
+typedef enum {
+	MULTIPLE,
+	SINGLE
+} ColumnsType;
+
+typedef enum {
+	MULTIPLE,
+	SINGLE
+} EnumTypesType;
+
+typedef enum {
+	NORMAL,
+	NULLABLE,
+	WITH
+} SingleTypeType;
+
+typedef enum {
+	CASCADE,
+	SET_NULL,
+	RESTRICT
+} OptionsType;
+
+typedef enum {
+	NORMAL,
+	NULLABLE,
+	SINGLETYPE,
+	NORMALFROM,
+	ONDELETEFROM,
+	ONUPDATEFROM,
+	ASENUMCOLUMNS,
+	ASENUMS
+} StatementType;
+
+typedef enum {
+	MULTIPLE,
+	SINGLE
+} StatementsType;
+
+typedef enum {
+	STRING,
+	INTEGER,
+	DECIMAL,
+	VTRUE,
+	VFALSE,
+	VNULL
+} PairType;
+
+typedef enum {
+	MULTIPLE,
+	SINGLE
+} PairsType;
+
+typedef enum {
+	MULTIPLE,
+	SINGLE
+} ObjectsType;
+
+typedef enum {
+	CREATE,
+	DELETE,
+	CHECK,
+	QUERY
+} GeneralType;
+
+//no terminales con diferentes reglas de prod
+struct Comparison {
+	ComparisonType type;
+};
+
+struct Factor {
+	FactorType type;
+	char * data;
+};
+
+struct Term {
+	TermType type;
+	Term * term;
+	Factor * factor;
+};
+
+struct Expression {
+	ExpressionType type;
+	Expression * expression;
+	Term * term;
+};
+
+struct Condition {
+	Expression * leftExpression;
+	Comparison * Comparison;
+	Expression * rightExpression;
+};
+
+struct CheckBody {
+	CheckBodyType type;
+	Condition * condition;
+	CheckBody * CheckBody;
+}
+
+struct Check {
+	char * tc_name;
+	CheckBody * CheckBody;
+};
+
+struct Request {
+	RequestType type;
+	char * tc_name;
+	Columns * columns;
+};
+
+struct QueryBody {
+	char * query_name;
+	Request * request;
+	char * tc_name;
+	char * condition; //chequear esto?
+};
+
+struct DeleteBody {
+	DeleteType type;
+	char * tc_name;
+	char * column_name;
+	Object * object;
+};
+
+struct Column {
+	bool is_unique;
+	char * tc_name;
+};
+
+struct Columns {
+	ColumnsType type;
+	Columns * columns;
+	Column * column;
+}
+
+struct EnumTypes {
+	EnumTypesType type;
+	EnumTypes * enumTypes;
+	char * string;
+};
+
+struct singleType {
+	SingleTypeType type;
+	char * tc_name;
+	char * with_tc_name;
+};
+
+struct Options {
+	OptionsType type;
+};
+
+struct Statement {
+	StatementType type;
+	Columns * columns;
+	char * as_name;
+	char * column_name;
+	SingleType * singleType;
+	char * tc_name_from;
+	char * column_name_from;
+	Options * options;
+	EnumTypes * enumTypes;
+};
+
+struct Statements{
+	StatementsType * type;
+	Statements * statements;
+	Statement * statement;
+}
+
+struct CreateTable {
+	bool using_key;
+	char * tc_name;
+	char * key_name;
+};
+
+struct CreateBody {
+	CreateTable * createTable;
+	Statements * statements;
+};
+
+struct Pair {
+	PairType type;
+	char * column_name;
+	char * column_value_string;
+	bool column_boolean;
+	Object * object;
+};
+
+struct Pairs {
+	PairsType type;
+	Pairs * pairs;
+	Pair * Pair;
+};
+
+struct Object {
+	Pairs * pairs;
+};
+
+struct Objects {
+	ObjectsType type;
+	Objects * objects;
+	Object * object;
+};
+
+struct InsertBody {
+	char * tc_name;
+	Objects * objects;
+};
+
+struct General {
+	GeneralType type;
+	InsertBody * insertBody;
+	CreateBody * createBody;
+	DeleteBody * deleteBody;
+	Check * check;
+	QueryBody * queryBody;
+};
+
+typedef struct {
+	General * general;
+} Program;
+
 
 #endif
