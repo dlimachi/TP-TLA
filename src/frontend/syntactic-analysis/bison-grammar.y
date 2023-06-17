@@ -97,58 +97,58 @@
 %start program
 
 %%
-program: general 	{$$ = return0();}
+program: general 																							{ $$ = GeneralGrammarAction($1); }
 	;
 
-general: insert_body
-	| create_body
-	| delete_body
-	| check
-	| query_body
+general: insert_body																						{ $$ = InsertBodyGrammarAction($1); }
+	| create_body																							{ $$ = CreateBodyGrammarAction($1); }
+	| delete_body																							{ $$ = DeleteBodyGrammarAction($1); }
+	| check																									{ $$ = CheckGrammarAction($1); }
+	| query_body																							{ $$ = QueryBodyGrammarAction($1); }
 	;
 
-insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY
+insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY												{ $$ = InsertObjectsGrammarAction($1); }
 	;
 
-objects: object
-	|	objects COMMA object
+objects: object																								{ $$ = ObjectGrammarAction($1); }
+	|	objects COMMA object																				{ $$ = PairObjectsGrammarAction($1); }
 	;
 
-object:	OPEN_CURLY pairs CLOSE_CURLY
+object:	OPEN_CURLY pairs CLOSE_CURLY																		{ $$ = ObjectGrammarAction($2); }
 	;
 
-pairs: pair
-	|	pairs COMMA pair	
+pairs: pair																									{ $$ = PairsGrammarAction($1); }
+	|	pairs COMMA pair																					{ $$ = PairsCommaGrammarAction($1, $3); }
 	;
 
-pair: STRING COLON STRING
-	|	STRING COLON INTEGER
-	|	STRING COLON DECIMAL
-	|	STRING COLON VTRUE
-	|	STRING COLON VFALSE
-	|	STRING COLON VNULL
+pair: STRING COLON STRING																					{ $$ = PairDoubleStringGrammarAction($1, $3); }
+	|	STRING COLON INTEGER																				{ $$ = PairStringIntegerGrammarAction($1, $3); }
+	|	STRING COLON DECIMAL																				{ $$ = PairStringDecimalGrammarAction($1, $3); }
+	|	STRING COLON VTRUE																					{ $$ = PairStringTrueGrammarAction($1, $3); }
+	|	STRING COLON VFALSE																					{ $$ = PairStringFalseGrammarAction($1, $3); }
+	|	STRING COLON VNULL																					{ $$ = PairStringNullGrammarAction($1, $3); }
 	;
 
 
-create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY
+create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY											{ $$ = CreateBodyGrammarAction($2, $4); }
 	;
 
-create_table: TC_NAME
-	|	TC_NAME USING_KEY TC_NAME
+create_table: TC_NAME																						{ $$ = CreateTableNameGrammarAction($1); }
+	|	TC_NAME USING_KEY TC_NAME																			{ $$ = CreateTableUsingNameGrammarAction($2); }
 	;
 
-statements: statements COMMA statement
-	|	statement	
+statements: statements COMMA statement																		{ $$ = StatementsGrammarAction($1, $2); }
+	|	statement												
 	;
 	
-statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME
-	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE
-	| 	TC_NAME AS single_type
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME											{ $$ = StatementGrammarAction($1, $4); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE										{ $$ = CreateStatementNullableGrammarAction($1, $3); }
+	| 	TC_NAME AS single_type																				{ $$ = CreateStatementGrammarAction($1, $3); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS						{ $$ = CreateStatementGrammarAction($1, $2); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options
 	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
-	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
+	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS										{ $$ = CreateAsEnumStatementGrammarAction($1, $4); }
 	;
 
 options: CASCADE
@@ -192,17 +192,17 @@ request: TC_NAME
 
 
 check:
-    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY
+    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY				{ $$ = CheckGrammarAction($1, $2, $3); }
     ;
 
 check_body:
-    condition
-    | check_body AND condition
-    | check_body OR condition
+    condition													{ $$ = CheckConditionGrammarAction($1, $2); }
+    | check_body AND condition									{ $$ = CheckAndGrammarAction($1, $2); }
+    | check_body OR condition									{ $$ = CheckOrGrammarAction($1, $2); }
     ;
 
 condition:
-    expression comparison expression
+    expression comparison expression							{ $$ = ConditionGrammarAction($1, $2); }
     ;
 
 expression:
@@ -218,12 +218,12 @@ term:
     ;
 
 factor:
-    TC_NAME
+    TC_NAME												
     | INTEGER
     | STRING
     ;
 
-comparison: GT | LT | EQ | GTEQ | LTEQ | NEQ;
+comparison: GT | LT | EQ | GTEQ | LTEQ | NEQ;					{ $$ = ComparitionConstantGrammarAction($1); }
 
 %%
 
