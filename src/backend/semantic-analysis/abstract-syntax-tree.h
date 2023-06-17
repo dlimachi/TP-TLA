@@ -57,9 +57,12 @@ typedef struct {
 */
 
 //A partir de aca voy a poner nuestras cosas
-
 //tipos que se auto-referencian:
-
+typedef struct Request Request;
+typedef struct Comparison Comparison;
+typedef struct Condition Condition;
+typedef struct Factor Factor;
+typedef struct Statement Statement;
 typedef struct Objects Objects;
 typedef struct Pairs Pairs;
 typedef struct Statements Statements;
@@ -68,6 +71,19 @@ typedef struct Columns Columns;
 typedef struct CheckBody CheckBody;
 typedef struct Expression Expression;
 typedef struct Term Term;
+typedef struct Object Object;
+typedef struct Column Column;
+typedef struct Options Options;
+typedef struct SingleType SingleType;
+typedef struct Pair Pair;
+typedef struct CreateTable CreateTable;
+typedef struct InsertBody InsertBody;
+typedef struct CreateBody CreateBody;
+typedef struct DeleteBody DeleteBody;
+typedef struct Check Check;
+typedef struct QueryBody QueryBody;
+typedef struct General General;
+	
 
 //enums a utilizar
 typedef enum {
@@ -211,7 +227,7 @@ struct CheckBody {
 	CheckBodyType type;
 	Condition * condition;
 	CheckBody * CheckBody;
-}
+};
 
 struct Check {
 	char * tc_name;
@@ -239,7 +255,7 @@ struct DeleteBody {
 };
 
 struct Column {
-	bool is_unique;
+	int is_unique;
 	char * tc_name;
 };
 
@@ -247,7 +263,7 @@ struct Columns {
 	ColumnsType type;
 	Columns * columns;
 	Column * column;
-}
+};
 
 struct EnumTypes {
 	EnumTypesType type;
@@ -277,14 +293,14 @@ struct Statement {
 	EnumTypes * enumTypes;
 };
 
-struct Statements{
+struct Statements {
 	StatementsType * type;
 	Statements * statements;
 	Statement * statement;
-}
+};
 
 struct CreateTable {
-	bool using_key;
+	int using_key;
 	char * tc_name;
 	char * key_name;
 };
@@ -298,7 +314,7 @@ struct Pair {
 	PairType type;
 	char * column_name;
 	char * column_value_string;
-	bool column_boolean;
+	int column_boolean;
 	Object * object;
 };
 
