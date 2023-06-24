@@ -92,3 +92,93 @@ int IntegerConstantGrammarAction(const int value) {
 	LogDebug("\tIntegerConstantGrammarAction(%d)", value);
 	return value;
 }
+
+StatementColumnsAsEnumGrammarAction($2, $4) 
+
+StatementAsEnumGrammarAction($1, $4)
+
+OptionsCascadeGrammarAction()
+
+OptionsSetNullGrammarAction()
+
+OptionsRestrictGrammarAction()
+
+SingleTypeGrammarAction($1)
+
+SingleTypeNullableGrammarAction($1)
+
+SingleTypeWithGrammarAction($1,$3)
+
+EnumTypesMultipleGrammarAction($1, $3)
+
+EnumTypesSingleGrammarAction($1)
+
+ColumnsMultipleGrammarAction($1,$3)
+
+ColumnsSingleGrammarAction($1)
+
+ColumnGrammarAction($1)
+
+ColumnUniqueGrammarAction($2)
+
+DeleteFromWhereGrammarAction($3,$5,$7)
+
+DeleteFromGrammarAction($3,$4)
+
+QueryBodyGrammarAction($4)
+
+RequestColumnsGrammarAction($2)
+
+RequestDistinctColumnsGrammarAction($3)
+
+RequestAllGrammarAction()
+
+CheckGrammarAction($2, $4)
+
+CheckConditionGrammarAction($1)
+
+CheckAndGrammarAction($1, $3)
+
+CheckOrGrammarAction($1, $3)
+
+ConditionGrammarAction($1, $2, $3)
+
+ExpressionTermGrammarAction($1)
+
+ExpressionAddGrammarAction($1,$3)
+
+ExpressionSubGrammarAction($1,$3)
+
+TermFactorGrammarAction($1)
+
+TermAllGrammarAction($1,$3)
+
+TermDivGrammarAction($1,$3)
+
+Tc_nameFactorGrammarAction($1)
+
+int IntegerFactorGrammarAction(int )
+
+char * StringFactorGrammarAction(char * string) {
+	LogDebug("\tStringFactorGrammarAction (%s)", string);
+	
+	return string;
+}
+
+LesserConstantGrammarAction()
+
+bool EqualConstantGrammarAction() {
+	LogDebug("\tEqualConstantGrammarAction");
+	return true;
+}
+
+GreaterOrEqualConstantGrammarAction()
+
+bool LesserOrEqualConstantGrammarAction(){
+	return 
+}
+
+bool NotEqualConstantGrammarAction() {
+	LogDebug("\tNotEqualConstantGrammarAction");
+	return false;
+}

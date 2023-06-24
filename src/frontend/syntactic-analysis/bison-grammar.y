@@ -100,11 +100,11 @@
 program: general 																							{ $$ = GeneralGrammarAction($1); }
 	;
 
-general: insert_body																						{ $$ = InsertBodyGrammarAction($1); }
-	| create_body																							{ $$ = CreateBodyGrammarAction($1); }
-	| delete_body																							{ $$ = DeleteBodyGrammarAction($1); }
-	| check																									{ $$ = CheckGrammarAction($1); }
-	| query_body																							{ $$ = QueryBodyGrammarAction($1); }
+general: insert_body																						{ $$ = GeneralInsertBodyGrammarAction($1); }
+	| create_body																							{ $$ = GeneralCreateBodyGrammarAction($1); }
+	| delete_body																							{ $$ = GeneralDeleteBodyGrammarAction($1); }
+	| check																									{ $$ = GeneralCheckGrammarAction($1); }
+	| query_body																							{ $$ = GeneralQueryBodyGrammarAction($1); }
 	;
 
 insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY												{ $$ = InsertObjectsGrammarAction($1); }
@@ -144,86 +144,91 @@ statements: statements COMMA statement																		{ $$ = StatementsGrammar
 statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME											{ $$ = StatementGrammarAction($1, $4); }
 	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE										{ $$ = CreateStatementNullableGrammarAction($1, $3); }
 	| 	TC_NAME AS single_type																				{ $$ = CreateStatementGrammarAction($1, $3); }
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS						{ $$ = CreateStatementGrammarAction($1, $2); }
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options
-	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS
-	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS										{ $$ = CreateAsEnumStatementGrammarAction($1, $4); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS						{ $$ = StatementFromGrammarAction($1, $3, $5); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	{ $$ = StatementOnDeleteGrammarAction($1, $3, $5, $7, $10); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options	{ $$ = StatementOnUpdateGrammarAction($1, $3, $5, $7, $10); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS	{ $$ = StatementColumnsAsEnumGrammarAction($2, $4); }
+	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS										{ $$ = StatementAsEnumGrammarAction($1, $4); }
 	;
 
-options: CASCADE
-	|	SET_NULL
-	|	RESTRICT
+options: CASCADE												{ $$ = OptionsCascadeGrammarAction(); }
+	|	SET_NULL												{ $$ = OptionsSetNullGrammarAction(); }
+	|	RESTRICT												{ $$ = OptionsRestrictGrammarAction(); }
 
-single_type: TC_NAME
-	|	TC_NAME NULLABLE
-	|	TC_NAME WITH TC_NAME
-	;
-
-
-enum_types: enum_types COMMA STRING
-	|	STRING
+single_type: TC_NAME											{ $$ = SingleTypeGrammarAction($1); }
+	|	TC_NAME NULLABLE										{ $$ = SingleTypeNullableGrammarAction($1); }
+	|	TC_NAME WITH TC_NAME									{ $$ = SingleTypeWithGrammarAction($1,$3); }
 	;
 
 
-columns: columns COMMA column
-	| column
-	;
-
-column: TC_NAME
-	| UNIQUE TC_NAME
+enum_types: enum_types COMMA STRING								{ $$ = EnumTypesMultipleGrammarAction($1, $3); }
+	|	STRING													{ $$ = EnumTypesSingleGrammarAction($1); }
 	;
 
 
+columns: columns COMMA column									{ $$ = ColumnsMultipleGrammarAction($1,$3); }
+	| column													{ $$ = ColumnsSingleGrammarAction($1); }
+	;
 
-delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING
-	| DELETE FROM TC_NAME object
+column: TC_NAME													{ $$ = ColumnGrammarAction($1); }
+	| UNIQUE TC_NAME											{ $$ = ColumnUniqueGrammarAction($2); }
 	;
 
 
-query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS
+
+delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING		{ $$ = DeleteFromWhereGrammarAction($3,$5,$7); }
+	| DELETE FROM TC_NAME object								{ $$ = DeleteFromGrammarAction($3,$4); }
+	;
+
+
+query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS	{ $$ = QueryBodyGrammarAction($4); }
 	;
 
 request: TC_NAME
-	|	OPEN_BRACKETS columns CLOSE_BRACKETS
-	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS
-	|	ALL
+	|	OPEN_BRACKETS columns CLOSE_BRACKETS					{ $$ = RequestColumnsGrammarAction($2); }
+	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS			{ $$ = RequestDistinctColumnsGrammarAction($3); }
+	|	ALL														{ $$ = RequestAllGrammarAction(); }
 	;
 
 
 check:
-    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY				{ $$ = CheckGrammarAction($1, $2, $3); }
+    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY				{ $$ = CheckGrammarAction($2, $4); }
     ;
 
 check_body:
-    condition													{ $$ = CheckConditionGrammarAction($1, $2); }
-    | check_body AND condition									{ $$ = CheckAndGrammarAction($1, $2); }
-    | check_body OR condition									{ $$ = CheckOrGrammarAction($1, $2); }
+    condition													{ $$ = CheckConditionGrammarAction($1); }
+    | check_body AND condition									{ $$ = CheckAndGrammarAction($1, $3); }
+    | check_body OR condition									{ $$ = CheckOrGrammarAction($1, $3); }
     ;
 
 condition:
-    expression comparison expression							{ $$ = ConditionGrammarAction($1, $2); }
+    expression comparison expression							{ $$ = ConditionGrammarAction($1, $2, $3); }
     ;
 
 expression:
-    term
-    | expression ADD term
-    | expression SUB term
+    term						{ $$ = ExpressionTermGrammarAction($1); }
+    | expression ADD term		{ $$ = ExpressionAddGrammarAction($1,$3); }
+    | expression SUB term		{ $$ = ExpressionSubGrammarAction($1,$3); }
     ;
 
 term:
-    factor
-    | term ALL factor
-    | term DIV factor
+    factor					{ $$ = TermFactorGrammarAction($1); }
+    | term ALL factor		{ $$ = TermAllGrammarAction($1,$3); }
+    | term DIV factor		{ $$ = TermDivGrammarAction($1,$3); }
     ;
 
 factor:
-    TC_NAME												
-    | INTEGER
-    | STRING
+    TC_NAME					{ $$ = Tc_nameFactorGrammarAction($1); }								
+    | INTEGER				{ $$ = IntegerFactorGrammarAction($1); }
+    | STRING				{ $$ = StringFactorGrammarAction($1); }
     ;
 
-comparison: GT | LT | EQ | GTEQ | LTEQ | NEQ;					{ $$ = ComparitionConstantGrammarAction($1); }
+comparison: GT 
+	| LT 					{ $$ = LesserConstantGrammarAction(); }
+	| EQ 					{ $$ = EqualConstantGrammarAction(); }
+	| GTEQ 					{ $$ = GreaterOrEqualConstantGrammarAction(); }
+	| LTEQ 					{ $$ = LesserOrEqualConstantGrammarAction(); }
+	| NEQ;					{ $$ = NotEqualConstantGrammarAction(); }
 
 %%
 

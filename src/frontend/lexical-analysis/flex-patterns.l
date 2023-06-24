@@ -40,7 +40,6 @@ whitespace		[ \f\n\r\t\v]
 ">="                                        { return GreaterThanEqualToPatternAction(yytext); }
 "<="                                        { return LesserThanEqualToPatternAction(yytext); }
 "=="                                        { return EqualToPatternAction(yytext); }
-"!="                                        { return NotEqualToPatternAction(yytext); }
 "<>"                                        { return NotEqualToPatternAction(yytext); }
 
 "("											{ return OpenParenthesisPatternAction(yytext); }
