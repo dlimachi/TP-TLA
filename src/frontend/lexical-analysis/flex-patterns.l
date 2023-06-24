@@ -28,7 +28,7 @@ whitespace		[ \f\n\r\t\v]
 <COMMENT>{endline}							{ ; }
 <COMMENT>"*/"								{ EndCommentPatternAction(); BEGIN(INITIAL); }
 
-{digit}+									{ return IntegerPatternAction(yytext, yyleng); }
+{digit}+									{  yylval.string = strdup(yytext); return INTEGER; }
 
 "+"											{ return AdditionOperatorPatternAction(yytext); }
 "-"											{ return SubtractionOperatorPatternAction(yytext); }
@@ -87,7 +87,7 @@ whitespace		[ \f\n\r\t\v]
 
 
 \"[^"]*\"                                   {  yylval.string = strdup(yytext); return STRING; }
--?[0-9]+(\.[0-9]+)?                         {  yylval.decimal = atof(yytext); return DECIMAL; }
+-?[0-9]+(\.[0-9]+)?                         {  yylval.string = strdup(yytext); return DECIMAL; }
 [a-zA-Z_][a-zA-Z0-9_]{0,127}                {  yylval.string = strdup(yytext); ECHO; return TC_NAME; }
 
 .											{ return UnknownPatternAction(yytext, yyleng); }
