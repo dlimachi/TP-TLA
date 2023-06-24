@@ -13,7 +13,11 @@ void Generator(Program * program) {
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
-
+	switch (program->general->type)
+	{
+	default:
+		break;
+	}
 	//insert
 
 	//delete
