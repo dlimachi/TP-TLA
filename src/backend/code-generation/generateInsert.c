@@ -5,12 +5,25 @@
 #define LEN 1024
 #define TC_LEN 128
 
-static char tc_name[TC_LEN];
-static char * code;
-static int progress;
+char tc_name[TC_LEN];
+char * code;
+int progress;
+
+typedef struct stringNode
+{
+    char string[TC_LEN];
+    struct stringNode * next;
+}stringNode;
+
+typedef stringNode * stringList;
+
+stringList colsList = NULL;
+stringList valuesList = NULL;
 
 void generatePair( Pair * pair ){
     char aux[LEN] = {0};
+
+    
 
 }
 
@@ -30,8 +43,12 @@ void generateObjects( Objects * objects ){
         return;
 
     // strcat el codigo a generar sobre code
+    strcat(code,"INSERT INTO ");
+    strcat(code, tc_name);
 
     generatePairs(objects->object->pairs);
+
+    strcat(code,"\n");
 
     // recursividad
     generateObjects(objects->objects);
