@@ -150,33 +150,48 @@ ExpressionAddGrammarAction($1,$3)
 
 ExpressionSubGrammarAction($1,$3)
 
-TermFactorGrammarAction($1)
+Term * TermFactorGrammarAction(Factor * factor)
 
-TermAllGrammarAction($1,$3)
+Term * TermAllGrammarAction(Term * term , Factor * factor) {
+    LogDebug("\tTermAllGrammarAction");
+    Term * termRet = malloc(sizeof(Term));
+    termRet->tyep = ALL;
+    termRet->term = term;
+    termRet->factor = factor;
+    return factor;
+}
 
 Term * TermDivGrammarAction(Term * term , Factor * factor) {
-
+    LogDebug("\tTermDivGrammarAction");
+    Term * termRet = malloc(sizeof(Term));
+    termRet->tyep = DIV;
+    termRet->term = term;
+    termRet->factor = factor;
+    return factor;
 }
 
-Factor * Tc_nameFactorGrammarAction(FactorType factorType) {
-	LogDebug("\tTc_nameFactorGrammarAction (%s)", factorType);
+Factor * Tc_nameFactorGrammarAction(char * data) {
+	LogDebug("\tTc_nameFactorGrammarAction (%s)", data);
 	Factor * factor = malloc(sizeof(Factor));
-	factor->type = factorType;
+	factor->type = TC_NAME;
+    factor->data = data;
 	return factor;
 }
 
-Factor * IntegerFactorGrammarAction(FactorType factorType) {
-	LogDebug("\tIntegerFactorGrammarAction (%s)", factorType);
+Factor * IntegerFactorGrammarAction(char * data) {
+	LogDebug("\tIntegerFactorGrammarAction (%s)", data);
 	Factor * factor = malloc(sizeof(Factor));
-	factor->type = factorType;
+	factor->type = INT;
+    factor->data = data;
 	return factor;
 }
 
 
-Factor * StringFactorGrammarAction(FactorType factorType) {
-	LogDebug("\tStringFactorGrammarAction (%s)", factorType);
+Factor * StringFactorGrammarAction(char * data) {
+	LogDebug("\tStringFactorGrammarAction (%s)", data);
 	Factor * factor = malloc(sizeof(Factor));
-	factor->type = factorType;
+	factor->type = STRING;
+    factor->data = data;
 	return factor;
 }
 

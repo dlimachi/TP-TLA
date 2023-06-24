@@ -219,8 +219,8 @@ term:
 
 factor:
     TC_NAME					{ $$ = Tc_nameFactorGrammarAction($1); }								
-    | INTEGER				{ $$ = IntegerFactorGrammarAction($1); }
-    | STRING				{ $$ = StringFactorGrammarAction($1); }
+    | INTEGER					{ $$ = IntegerFactorGrammarAction($1); }
+    | STRING					{ $$ = StringFactorGrammarAction($1); }
     ;
 
 comparison: GT 
