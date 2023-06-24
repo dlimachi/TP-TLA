@@ -28,8 +28,8 @@ void yyerror(const char * string) {
 * indica que efectivamente el programa de entrada se pudo generar con esta
 * gramática, o lo que es lo mismo, que el programa pertenece al lenguaje.
 */
-int ProgramGrammarAction(const int value) {
-	LogDebug("\tProgramGrammarAction(%d)", value);
+int GeneralGrammarAction(General * value) {
+	LogDebug("\tGeneralGrammarAction(%d)", value);
 	/*
 	* "state" es una variable global que almacena el estado del compilador,
 	* cuyo campo "succeed" indica si la compilación fue o no exitosa, la cual
@@ -43,7 +43,11 @@ int ProgramGrammarAction(const int value) {
 	* la expresión se computa on-the-fly, y es la razón por la cual esta
 	* variable es un simple entero, en lugar de un nodo.
 	*/
-	state.result = value;
+
+	Program * program = malloc(sizeof(Program));
+	program->general = value;
+
+	state.program = program;
 	return value;
 }
 
