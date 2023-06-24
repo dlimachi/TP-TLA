@@ -189,6 +189,7 @@ typedef enum {
 } ObjectsType;
 
 typedef enum {
+	INSERT,
 	CREATE,
 	DELETE,
 	CHECK,

@@ -54,45 +54,73 @@ int return0() {
 	return 0;
 }
 
-int AdditionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tAdditionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Add(leftValue, rightValue);
-}
+General * GeneralInsertBodyGrammarAction(InsertBody * InsertBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = INSERT;
+	general->InsertBody = InsertBody;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int SubtractionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tSubtractionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Subtract(leftValue, rightValue);
-}
+General * GeneralCreateBodyGrammarAction(CreateBody * createBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CREATE;
+	general->InsertBody = NULL;
+	general->createBody = createBody;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int MultiplicationExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tMultiplicationExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Multiply(leftValue, rightValue);
-}
+General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CREATE;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = deleteBody;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int DivisionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tDivisionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Divide(leftValue, rightValue);
-}
+General * GeneralCheckGrammarAction(Check * chek){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CHECK;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = check;
+	general->queryBody = NULL;
+	return general;
+};
 
-int FactorExpressionGrammarAction(const int value) {
-	LogDebug("\tFactorExpressionGrammarAction(%d)", value);
-	return value;
-}
+General * GeneralQueryBodyGrammarAction(QueryBody * queryBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = QUERY;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = queryBody;
+	return general;
+};
 
-int ExpressionFactorGrammarAction(const int value) {
-	LogDebug("\tExpressionFactorGrammarAction(%d)", value);
-	return value;
-}
-
-int ConstantFactorGrammarAction(const int value) {
-	LogDebug("\tConstantFactorGrammarAction(%d)", value);
-	return value;
-}
-
-int IntegerConstantGrammarAction(const int value) {
-	LogDebug("\tIntegerConstantGrammarAction(%d)", value);
-	return value;
-}
+InsertBody * InsertObjectsGrammarAction(char * tcName, Objects* objects){
+	LogDebug("\tInsertObjectsGrammarAction");	
+	InsertBody * insertBody = calloc(1,sizeof(InsertBody));
+	general->tc_name = tcName;
+	general->objects = objects;
+	return insertBody;
+};
 
 StatementColumnsAsEnumGrammarAction($2, $4) 
 
