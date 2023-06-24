@@ -18,24 +18,26 @@ void Generator(Program * program) {
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
 	switch (program->general->type) {
-        case(INSERT):
+        case(GINSERT):
             generateInsert(program->general->insertBody);
             break;
-        case(DELETE):
+        case(GDELETE):
             generateDelete(program->general->deleteBody);
             break;
-        case(QUERY):
+        case(GQUERY):
             generateQuery(program->general->queryBody);
             break;
-        case(CREATE):
+        case(GCREATE):
             generateCreate(program->general->createBody);
             break;
-        case(CHECK):
+        case(GCHECK):
             generateCheck(program->general->check);
             break;
 	    default:
 		    break;
 	}
+
+
 
 }
 

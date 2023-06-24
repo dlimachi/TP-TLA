@@ -55,11 +55,11 @@ int return0() {
 	return 0;
 }
 
-Program * GeneralInsertBodyGrammarAction(InsertBody * InsertBody){
+General * GeneralInsertBodyGrammarAction(InsertBody * InsertBody){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
 	general->type = GINSERT;
-	general->InsertBody = InsertBody;
+	general->insertBody = InsertBody;
 	general->createBody = NULL;
 	general->deleteBody = NULL;
 	general->check = NULL;
@@ -71,7 +71,7 @@ General * GeneralCreateBodyGrammarAction(CreateBody * createBody){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
 	general->type = GCREATE;
-	general->InsertBody = NULL;
+	general->insertBody = NULL;
 	general->createBody = createBody;
 	general->deleteBody = NULL;
 	general->check = NULL;
@@ -83,7 +83,7 @@ General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
 	general->type = GCREATE;
-	general->InsertBody = NULL;
+	general->insertBody = NULL;
 	general->createBody = NULL;
 	general->deleteBody = deleteBody;
 	general->check = NULL;
@@ -91,11 +91,11 @@ General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody){
 	return general;
 };
 
-General * GeneralCheckGrammarAction(Check * chek){
+General * GeneralCheckGrammarAction(Check * check){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
 	general->type = GCHECK;
-	general->InsertBody = NULL;
+	general->insertBody = NULL;
 	general->createBody = NULL;
 	general->deleteBody = NULL;
 	general->check = check;
@@ -107,7 +107,7 @@ General * GeneralQueryBodyGrammarAction(QueryBody * queryBody){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
 	general->type = GQUERY;
-	general->InsertBody = NULL;
+	general->insertBody = NULL;
 	general->createBody = NULL;
 	general->deleteBody = NULL;
 	general->check = NULL;
@@ -118,18 +118,18 @@ General * GeneralQueryBodyGrammarAction(QueryBody * queryBody){
 InsertBody * InsertObjectsGrammarAction(char * tcName, Objects* objects){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	InsertBody * insertBody = calloc(1,sizeof(InsertBody));
-	general->tc_name = tcName;
-	general->objects = objects;
+	insertBody->tc_name = tcName;
+	insertBody->objects = objects;
 	return insertBody;
 };
 
 Objects * ObjectsGrammarAction(Object * object){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	Objects * objects = calloc(1,sizeof(Objects));
-	objects->type = SIMPLE;
+	objects->type = SINGLE;
 	objects->object = object;
 	objects->objects= NULL;
-	return Objects;
+	return objects;
 };
 
 Objects * ObjectsMultipleGrammarAction(Objects * objects, Object * object){
@@ -172,7 +172,7 @@ Pair * PairStringStringGrammarAction(char* cName,char* cValue){
 	pair->type=PSTRING;
 	pair->column_name= cName;
 	pair->column_value_string=cValue;
-	pair->column_boolean=NULL;
+	// pair->column_boolean=NULL;
 	return pair;
 };
 
@@ -182,7 +182,7 @@ Pair * PairStringIntegerGrammarAction(char* cName,char* cValue){
 	pair->type=PINTEGER;
 	pair->column_name= cName;
 	pair->column_value_string=cValue;
-	pair->column_boolean=NULL;
+	// pair->column_boolean=NULL;
 	return pair;
 };
 
@@ -192,7 +192,7 @@ Pair * PairStringDecimalGrammarAction(char* cName,char* cValue){
 	pair->type=PDECIMAL;
 	pair->column_name= cName;
 	pair->column_value_string=cValue;
-	pair->column_boolean=NULL;
+	// pair->column_boolean=NULL;
 	return pair;
 };
 
@@ -260,7 +260,7 @@ Statements * StatementsMultipleGrammarAction(Statements * statementsArg, Stateme
 Statements * StatementsSimpleGrammarAction(Statements * statementsArg, Statement * statement){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	Statements * statements = calloc(1,sizeof(Statements));
-	statements->type=SIMPLE;
+	statements->type=SINGLE;
 	statements->statements= NULL;
 	statements->statement= statement;
 	return statements;
@@ -492,7 +492,7 @@ DeleteBody * DeleteFromWhereGrammarAction( char * fromTable, char * conditionCol
 	deleteBody->type=DWHERE;
 	deleteBody->tc_name=fromTable;
 	deleteBody->column_name=conditionColumn;
-	deleteBody->conditionString=conditionString;
+	deleteBody->condition_string=conditionString;
 	deleteBody->object=NULL;
 	return deleteBody;
 };
@@ -503,7 +503,7 @@ DeleteBody * DeleteFromGrammarAction( char * fromTable, Object * object){
 	deleteBody->type=OBJECT;
 	deleteBody->tc_name=fromTable;
 	deleteBody->column_name=NULL;
-	deleteBody->conditionString=NULL;
+	deleteBody->condition_string=NULL;
 	deleteBody->object=object;
 	return deleteBody;
 };
@@ -556,9 +556,9 @@ Request * RequestAllGrammarAction() {
 
 Check * CheckGrammarAction(char *tc_name, CheckBody * checkBody) {
     LogDebug("\tCheckGrammarAction");
-    CheckBody * check = calloc(1, sizeof(Check));
+    Check * check = calloc(1, sizeof(Check));
     check->tc_name = tc_name;
-    cond->checkBody = checkBody;
+    check->checkBody = checkBody;
     return check;
 }
 
@@ -567,7 +567,7 @@ CheckBody * CheckConditionGrammarAction(Condition * condition) {
     CheckBody * check = calloc(1, sizeof(CheckBody));
     check->type = CONDITION;
     check->condition = condition;
-    cond->checkBody = NULL;
+    check->checkBody = NULL;
     return check;
 }
 
@@ -576,7 +576,7 @@ CheckBody * CheckAndGrammarAction(CheckBody * checkBody, Condition * condition) 
     CheckBody * check = calloc(1, sizeof(CheckBody));
     check->type = CAND;
     check->condition = condition;
-    cond->checkBody = checkBody;
+    check->checkBody = checkBody;
     return check;
 }
 
@@ -585,7 +585,7 @@ CheckBody * CheckOrGrammarAction(CheckBody * checkBody, Condition * condition) {
     CheckBody * check = calloc(1, sizeof(CheckBody));
     check->type = COR;
     check->condition = condition;
-    cond->checkBody = checkBody;
+    check->checkBody = checkBody;
     return check;
 }
 
@@ -595,7 +595,7 @@ Condition * ConditionGrammarAction(Expression * expL, Comparison * comparison, E
     cond->leftExpression = expL;
     cond->comparison = comparison;
     cond->rightExpression = expR;
-    return comp;
+    return cond;
 }
 
 Expression * ExpressionTermGrammarAction(Term * term) {
@@ -655,7 +655,7 @@ Term * TermDivGrammarAction(Term * term , Factor * factor) {
 Factor * Tc_nameFactorGrammarAction(char * data) {
 	LogDebug("\tTc_nameFactorGrammarAction (%s)", data);
 	Factor * factor = calloc(1,sizeof(Factor));
-	factor->type = TC_NAME;
+	factor->type = FTC_NAME;
     factor->data = data;
 	return factor;
 }

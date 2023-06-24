@@ -74,7 +74,7 @@ typedef struct Term Term;
 typedef struct Object Object;
 typedef struct Column Column;
 typedef struct Options Options;
-typedef struct SingleType SingleType;
+typedef struct singleType SingleType;
 typedef struct Pair Pair;
 typedef struct CreateTable CreateTable;
 typedef struct InsertBody InsertBody;
@@ -304,7 +304,7 @@ struct Pair {
 struct Pairs {
 	MultiplesType type;
 	Pairs * pairs;
-	Pair * Pair;
+	Pair * pair;
 };
 
 struct Object {
