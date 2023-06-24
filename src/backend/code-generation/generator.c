@@ -5,6 +5,10 @@
 /**
  * Implementación de "generator.h".
  */
+void generateDelete(DeleteBody * deleteBody);
+void generateQuery(QueryBody * queryBody);
+void generateCreate(CreateBody * createBody);
+void generateCheck(Check * check);
 
 void Generator(Program * program) {
 	// Generator va a generar un archivo .sql
@@ -13,18 +17,45 @@ void Generator(Program * program) {
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
-	switch (program->general->type)
-	{
-	default:
-		break;
+	switch (program->general->type) {
+        case(INSERT):
+            generateInsert(program->general->insertBody);
+            break;
+        case(DELETE):
+            generateDelete(program->general->deleteBody);
+            break;
+        case(QUERY):
+            generateQuery(program->general->queryBody);
+            break;
+        case(CREATE):
+            generateCreate(program->general->createBody);
+            break;
+        case(CHECK):
+            generateCheck(program->general->check);
+            break;
+	    default:
+		    break;
 	}
-	//insert
-
-	//delete
-
-	//check
-
-	//query
-
 
 }
+
+void generateInsert(InsertBody * insertBody) {
+
+}
+
+static void generateDelete(DeleteBody * deleteBody) {
+
+}
+
+static void generateQuery(QueryBody * queryBody) {
+
+}
+
+static void generateCreate(CreateBody * createBody) {
+
+}
+
+static void generateCheck(Check * check) {
+
+}
+
