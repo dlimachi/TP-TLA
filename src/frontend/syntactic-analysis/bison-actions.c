@@ -154,37 +154,62 @@ TermFactorGrammarAction($1)
 
 TermAllGrammarAction($1,$3)
 
-TermDivGrammarAction($1,$3)
+Term * TermDivGrammarAction(Term * term , Factor * factor) {
 
-Tc_nameFactorGrammarAction($1)
+}
+
+Factor * Tc_nameFactorGrammarAction(FactorType factorType) {
+	LogDebug("\tTc_nameFactorGrammarAction (%s)", factorType);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = factorType;
+	return factor;
+}
+
+Factor * IntegerFactorGrammarAction(FactorType factorType) {
+	LogDebug("\tIntegerFactorGrammarAction (%s)", factorType);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = factorType;
+	return factor;
+}
 
 
+Factor * StringFactorGrammarAction(FactorType factorType) {
+	LogDebug("\tStringFactorGrammarAction (%s)", factorType);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = factorType;
+	return factor;
+}
 
-Comparison LesserConstantGrammarAction() {
+Comparison * LesserConstantGrammarAction() {
 	LogDebug("\tLesserConstantGrammarAction");
 	Comparison * comp = malloc(sizeof(Comparison));
-	comp->ComparisonType = LT;
+	comp->type = LT;
 	return comp;
 }
 
-Comparison EqualConstantGrammarAction() {
+Comparison * EqualConstantGrammarAction() {
 	LogDebug("\tEqualConstantGrammarAction");
 	Comparison * comp = malloc(sizeof(Comparison));
-	comp->ComparisonType = EQ;
+	comp->type = EQ;
 	return comp;
 }
 
-GreaterOrEqualConstantGrammarAction()
-
-Comparison LesserOrEqualConstantGrammarAction(){
+Comparison * GreaterOrEqualConstantGrammarAction() {
+	LogDebug("\tEqualConstantGrammarAction");
 	Comparison * comp = malloc(sizeof(Comparison));
-	comp->ComparisonType = LTEQ;
+	comp->type = GT;
 	return comp;
 }
 
-Comparison NotEqualConstantGrammarAction() {
+Comparison * LesserOrEqualConstantGrammarAction(){
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = LTEQ;
+	return comp;
+}
+
+Comparison * NotEqualConstantGrammarAction() {
 	LogDebug("\tNotEqualConstantGrammarAction");
 	Comparison * comp = malloc(sizeof(Comparison));
-	comp->ComparisonType = NEQ;
+	comp->type = NEQ;
 	return comp;
 }
