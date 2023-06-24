@@ -51,7 +51,7 @@ CreateTable * CreateTableUsingNameGrammarAction(char * tcName, char * keyName);
 
 //Statements
 Statements * StatementsMultipleGrammarAction(Statements * statementsArg, Statement * statement);
-Statements * StatementsSimpleGrammarAction(Statements * statementsArg, Statement * statement);
+Statements * StatementsSimpleGrammarAction(Statement * statement);
 Statement * StatementColumnsGrammarAction(Columns * columns, char * asName);
 Statement * StatementColumnsNullableGrammarAction(Columns * columns, char * asName);
 Statement * StatementSimpleGrammarAction(char * columnName, SingleType * singleType);
@@ -126,4 +126,27 @@ Comparison * EqualConstantGrammarAction();
 Comparison * GreaterOrEqualConstantGrammarAction();
 Comparison * LesserOrEqualConstantGrammarAction();
 Comparison * NotEqualConstantGrammarAction();
+
+
+void FreeInsertBody(InsertBody* insertBody);
+void FreeColumn(Column * column);
+void FreeColumns(Columns * columns);
+void FreePair(Pair* pair);
+void FreePairs(Pairs* pairs);
+void FreeObject(Object* object);
+void FreeObjects(Objects* objects);
+void FreeInsertBody(InsertBody* insertBody);
+void FreeSingleType(SingleType* singleType);
+void FreeOptions(Options* options);
+void FreeEnumTypes(EnumTypes* enumTypes);
+void FreeStatement(Statement* statement);
+void FreeStatements(Statements* statements);
+void FreeCreateTable(CreateTable* createTable);
+void FreeCreateBody(CreateBody* createBody);
+void FreeDeleteBody(DeleteBody* deleteBody);
+void FreeCheck(Check* check);
+void FreeRequest(Request* request);
+void FreeQueryBody(QueryBody* queryBody);
+void FreeGeneral(General* general);
+
 #endif

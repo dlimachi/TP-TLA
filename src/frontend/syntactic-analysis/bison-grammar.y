@@ -41,16 +41,17 @@
 	Check *check;
 	QueryBody *queryBody;
 	General *general;
+	General *program;
 
 	
 
 	// Terminales.
 	token token;
-	int integer;
+	char* integer;
 
 
 	char *string;
-    double decimal;
+    char* decimal;
 }
 
 // IDs y tipos de los tokens terminales generados desde Flex.

@@ -1,6 +1,7 @@
 #include "bison-actions.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 /**
  * Implementación de "bison-grammar.h".
@@ -26,7 +27,7 @@ void yyerror(const char * string) {
 * indica que efectivamente el programa de entrada se pudo generar con esta
 * gramática, o lo que es lo mismo, que el programa pertenece al lenguaje.
 */
-int GeneralGrammarAction(General * value) {
+Program * GeneralGrammarAction(General * value) {
 	LogDebug("\tGeneralGrammarAction(%d)", value);
 	/*
 	* "state" es una variable global que almacena el estado del compilador,
@@ -46,7 +47,7 @@ int GeneralGrammarAction(General * value) {
 	program->general = value;
 
 	state.program = program;
-	return value;
+	return program;
 }
 
 int return0() {
@@ -257,7 +258,7 @@ Statements * StatementsMultipleGrammarAction(Statements * statementsArg, Stateme
 	return statements;
 };
 
-Statements * StatementsSimpleGrammarAction(Statements * statementsArg, Statement * statement){
+Statements * StatementsSimpleGrammarAction( Statement * statement){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	Statements * statements = calloc(1,sizeof(Statements));
 	statements->type=SINGLE;
@@ -452,11 +453,11 @@ EnumTypes * EnumTypesSingleGrammarAction(char * string){
 	return enumTypes;
 };
 
-Columns * ColumnsMultipleGrammarAction(Columns * columns, Column * column){
+Columns * ColumnsMultipleGrammarAction(Columns * columnsArg, Column * column){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	Columns * columns = calloc(1,sizeof(Columns));
 	columns->type=MULTIPLE;
-	columns->columns=columns;
+	columns->columns=columnsArg;
 	columns->column=column;
 	return columns;
 };
@@ -711,52 +712,24 @@ Comparison * NotEqualConstantGrammarAction() {
 	return comp;
 }
 
-void freeGeneral(General* general) {
-    if (general == NULL) {
+
+void FreeColumn(Column * column){
+	if (column == NULL) {
         return;
     }
 
-    if (general->InsertBody != NULL) {
-        freeInsertBody(general->InsertBody);
-    }
-
-    if (general->createBody != NULL) {
-        freeCreateBody(general->createBody);
-    }
-
-    if (general->deleteBody != NULL) {
-        freeDeleteBody(general->deleteBody);
-    }
-
-    if (general->check != NULL) {
-        freeCheck(general->check);
-    }
-
-    if (general->queryBody != NULL) {
-        freeQueryBody(general->queryBody);
-    }
-
-    free(general);
+    free(column->tc_name);
+    free(column);
 }
 
-void freeInsertBody(InsertBody* insertBody) {
-    if (insertBody == NULL) {
+void FreeColumns(Columns * columns){
+	if (columns == NULL) {
         return;
     }
 
-    free(insertBody->tc_name);
-    freeObjects(insertBody->objects);
-    free(insertBody);
-}
-
-void freeObjects(Objects* objects) {
-    if (objects == NULL) {
-        return;
-    }
-
-    freeObject(objects->object);
-    freeObjects(objects->objects);
-    free(objects);
+    FreeColumn(columns->column);
+    FreeColumns(columns->columns);
+    free(columns);
 }
 
 void FreePair(Pair* pair) {
@@ -794,14 +767,14 @@ void FreeObjects(Objects* objects) {
     free(objects);
 }
 
-void FreeInsertBody(InsertBody* insertBody) {
-    if (insertBody == NULL) {
-        return;
-    }
-    free(insertBody->tc_name);
-    FreeObjects(insertBody->objects);
-    free(insertBody);
+void FreeRequest(Request * request){
+	if (request == NULL){
+		return;
+	}
+	free(request->tc_name);
+	FreeColumns(request->columns);
 }
+
 
 void FreeSingleType(SingleType* singleType) {
     if (singleType == NULL) {
@@ -870,18 +843,6 @@ void FreeCreateBody(CreateBody* createBody) {
     free(createBody);
 }
 
-void FreeGeneral(General* general) {
-    if (general == NULL) {
-        return;
-    }
-    free(general->tc_name);
-    FreeInsertBody(general->InsertBody);
-    FreeCreateBody(general->createBody);
-    FreeDeleteBody(general->deleteBody);
-    FreeCheck(general->check);
-    FreeQueryBody(general->queryBody);
-    free(general);
-}
 
 void FreeDeleteBody(DeleteBody* deleteBody) {
     if (deleteBody == NULL) {
@@ -899,12 +860,52 @@ void FreeCheck(Check* check) {
     free(check);
 }
 
+
 void FreeQueryBody(QueryBody* queryBody) {
     if (queryBody == NULL) {
         return;
     }
     free(queryBody->tc_name);
-    free(queryBody->column_name);
-    FreeStatements(queryBody->statements);
+    free(queryBody->condition);
+	free(queryBody->query_name);
+    FreeRequest(queryBody->request);
     free(queryBody);
 }
+
+void FreeInsertBody(InsertBody* insertBody) {
+    if (insertBody == NULL) {
+        return;
+    }
+    free(insertBody->tc_name);
+    FreeObjects(insertBody->objects);
+    free(insertBody);
+}
+
+void FreeGeneral(General* general) {
+    if (general == NULL) {
+        return;
+    }
+
+    if (general->insertBody != NULL) {
+        FreeInsertBody(general->insertBody);
+    }
+
+    if (general->createBody != NULL) {
+        FreeCreateBody(general->createBody);
+    }
+
+    if (general->deleteBody != NULL) {
+        FreeDeleteBody(general->deleteBody);
+    }
+
+    if (general->check != NULL) {
+        FreeCheck(general->check);
+    }
+
+    if (general->queryBody != NULL) {
+        FreeQueryBody(general->queryBody);
+    }
+
+    free(general);
+}
+
