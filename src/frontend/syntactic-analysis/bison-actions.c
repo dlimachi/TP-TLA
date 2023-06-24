@@ -3,6 +3,7 @@
 #include "bison-actions.h"
 #include <stdio.h>
 #include <string.h>
+#include "abstract-syntax-tree.h"
 
 /**
  * Implementación de "bison-grammar.h".
@@ -57,45 +58,73 @@ int return0() {
 	return 0;
 }
 
-int AdditionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tAdditionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Add(leftValue, rightValue);
-}
+General * GeneralInsertBodyGrammarAction(InsertBody * InsertBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = INSERT;
+	general->InsertBody = InsertBody;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int SubtractionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tSubtractionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Subtract(leftValue, rightValue);
-}
+General * GeneralCreateBodyGrammarAction(CreateBody * createBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CREATE;
+	general->InsertBody = NULL;
+	general->createBody = createBody;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int MultiplicationExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tMultiplicationExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Multiply(leftValue, rightValue);
-}
+General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CREATE;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = deleteBody;
+	general->check = NULL;
+	general->queryBody = NULL;
+	return general;
+};
 
-int DivisionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("\tDivisionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Divide(leftValue, rightValue);
-}
+General * GeneralCheckGrammarAction(Check * chek){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = CHECK;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = check;
+	general->queryBody = NULL;
+	return general;
+};
 
-int FactorExpressionGrammarAction(const int value) {
-	LogDebug("\tFactorExpressionGrammarAction(%d)", value);
-	return value;
-}
+General * GeneralQueryBodyGrammarAction(QueryBody * queryBody){
+	LogDebug("\tGeneralInsertBodyGrammarAction");
+	General * general = calloc(1,sizeof(General));
+	general->type = QUERY;
+	general->InsertBody = NULL;
+	general->createBody = NULL;
+	general->deleteBody = NULL;
+	general->check = NULL;
+	general->queryBody = queryBody;
+	return general;
+};
 
-int ExpressionFactorGrammarAction(const int value) {
-	LogDebug("\tExpressionFactorGrammarAction(%d)", value);
-	return value;
-}
-
-int ConstantFactorGrammarAction(const int value) {
-	LogDebug("\tConstantFactorGrammarAction(%d)", value);
-	return value;
-}
-
-int IntegerConstantGrammarAction(const int value) {
-	LogDebug("\tIntegerConstantGrammarAction(%d)", value);
-	return value;
-}
+InsertBody * InsertObjectsGrammarAction(char * tcName, Objects* objects){
+	LogDebug("\tInsertObjectsGrammarAction");	
+	InsertBody * insertBody = calloc(1,sizeof(InsertBody));
+	general->tc_name = tcName;
+	general->objects = objects;
+	return insertBody;
+};
 
 StatementColumnsAsEnumGrammarAction($2, $4) 
 
@@ -153,36 +182,81 @@ ExpressionAddGrammarAction($1,$3)
 
 ExpressionSubGrammarAction($1,$3)
 
-TermFactorGrammarAction($1)
+Term * TermFactorGrammarAction(Factor * factor)
 
-TermAllGrammarAction($1,$3)
-
-TermDivGrammarAction($1,$3)
-
-Tc_nameFactorGrammarAction($1)
-
-int IntegerFactorGrammarAction(int )
-
-char * StringFactorGrammarAction(char * string) {
-	LogDebug("\tStringFactorGrammarAction (%s)", string);
-	
-	return string;
+Term * TermAllGrammarAction(Term * term , Factor * factor) {
+    LogDebug("\tTermAllGrammarAction");
+    Term * termRet = malloc(sizeof(Term));
+    termRet->tyep = ALL;
+    termRet->term = term;
+    termRet->factor = factor;
+    return factor;
 }
 
-LesserConstantGrammarAction()
+Term * TermDivGrammarAction(Term * term , Factor * factor) {
+    LogDebug("\tTermDivGrammarAction");
+    Term * termRet = malloc(sizeof(Term));
+    termRet->tyep = DIV;
+    termRet->term = term;
+    termRet->factor = factor;
+    return factor;
+}
 
-bool EqualConstantGrammarAction() {
+Factor * Tc_nameFactorGrammarAction(char * data) {
+	LogDebug("\tTc_nameFactorGrammarAction (%s)", data);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = TC_NAME;
+    factor->data = data;
+	return factor;
+}
+
+Factor * IntegerFactorGrammarAction(char * data) {
+	LogDebug("\tIntegerFactorGrammarAction (%s)", data);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = INT;
+    factor->data = data;
+	return factor;
+}
+
+
+Factor * StringFactorGrammarAction(char * data) {
+	LogDebug("\tStringFactorGrammarAction (%s)", data);
+	Factor * factor = malloc(sizeof(Factor));
+	factor->type = STRING;
+    factor->data = data;
+	return factor;
+}
+
+Comparison * LesserConstantGrammarAction() {
+	LogDebug("\tLesserConstantGrammarAction");
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = LT;
+	return comp;
+}
+
+Comparison * EqualConstantGrammarAction() {
 	LogDebug("\tEqualConstantGrammarAction");
-	return true;
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = EQ;
+	return comp;
 }
 
-GreaterOrEqualConstantGrammarAction()
-
-bool LesserOrEqualConstantGrammarAction(){
-	return 
+Comparison * GreaterOrEqualConstantGrammarAction() {
+	LogDebug("\tEqualConstantGrammarAction");
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = GT;
+	return comp;
 }
 
-bool NotEqualConstantGrammarAction() {
+Comparison * LesserOrEqualConstantGrammarAction(){
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = LTEQ;
+	return comp;
+}
+
+Comparison * NotEqualConstantGrammarAction() {
 	LogDebug("\tNotEqualConstantGrammarAction");
-	return false;
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->type = NEQ;
+	return comp;
 }
