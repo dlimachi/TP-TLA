@@ -60,7 +60,7 @@
 %token <token> MUL
 %token <token> DIV
 %token <token> INSERT_INTO
-%token <token> TC_NAME
+%token <string> TC_NAME
 %token <token> DOT
 %token <token> CREATE
 %token <token> AS
@@ -224,7 +224,7 @@ column: TC_NAME														{ $$ = ColumnGrammarAction($1); }
 
 
 
-delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING								{ $$ = DeleteFromWhereGrammarAction($3,$5,$7); }
+delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQ STRING								{ $$ = DeleteFromWhereGrammarAction($3,$5,$7); }
 	| DELETE FROM TC_NAME object											{ $$ = DeleteFromGrammarAction($3,$4); }
 	;
 
