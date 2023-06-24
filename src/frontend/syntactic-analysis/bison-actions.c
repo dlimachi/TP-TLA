@@ -164,9 +164,22 @@ RequestColumnsGrammarAction($2)
 
 RequestDistinctColumnsGrammarAction($3)
 ////////////////////////////////////////////////////////////////////////////////////
-RequestAllGrammarAction()
+Request * RequestAllGrammarAction() {
+    LogDebug("\tRequestAllGrammarAction");
+    Request * request = calloc(1, sizeof(Request));
+    request->type = ALL;
+    request->tc_name = null;
+    request->columns = null;
+    return request;
+}
 
-Check * CheckGrammarAction($2, $4)
+Check * CheckGrammarAction(char *tc_name, CheckBody * checkBody) {
+    LogDebug("\tCheckGrammarAction");
+    CheckBody * check = calloc(1, sizeof(Check));
+    check->tc_name = tc_name;
+    cond->checkBody = checkBody;
+    return check;
+}
 
 CheckBody * CheckConditionGrammarAction(Condition * condition) {
     LogDebug("\tCheckAndGrammarAction");
@@ -233,7 +246,7 @@ Expression * ExpressionSubGrammarAction(Expression * expression, Term * term){
 
 Term * TermFactorGrammarAction(Factor * factor) {
     LogDebug("\tTermFactorGrammarAction");
-    Term * termRet = malloc(sizeof(Term));
+    Term * termRet = calloc(1,sizeof(Term));
     termRet->type = FACTOR;
     termRet->term = null;
     termRet->factor = factor;
@@ -242,7 +255,7 @@ Term * TermFactorGrammarAction(Factor * factor) {
 
 Term * TermAllGrammarAction(Term * term , Factor * factor) {
     LogDebug("\tTermAllGrammarAction");
-    Term * termRet = malloc(sizeof(Term));
+    Term * termRet = calloc(1,sizeof(Term));
     termRet->type = ALL;
     termRet->term = term;
     termRet->factor = factor;
@@ -251,7 +264,7 @@ Term * TermAllGrammarAction(Term * term , Factor * factor) {
 
 Term * TermDivGrammarAction(Term * term , Factor * factor) {
     LogDebug("\tTermDivGrammarAction");
-    Term * termRet = malloc(sizeof(Term));
+    Term * termRet = calloc(1,sizeof(Term));
     termRet->type = DIV;
     termRet->term = term;
     termRet->factor = factor;
@@ -260,7 +273,7 @@ Term * TermDivGrammarAction(Term * term , Factor * factor) {
 
 Factor * Tc_nameFactorGrammarAction(char * data) {
 	LogDebug("\tTc_nameFactorGrammarAction (%s)", data);
-	Factor * factor = malloc(sizeof(Factor));
+	Factor * factor = calloc(1,sizeof(Factor));
 	factor->type = TC_NAME;
     factor->data = data;
 	return factor;
@@ -268,7 +281,7 @@ Factor * Tc_nameFactorGrammarAction(char * data) {
 
 Factor * IntegerFactorGrammarAction(char * data) {
 	LogDebug("\tIntegerFactorGrammarAction (%s)", data);
-	Factor * factor = malloc(sizeof(Factor));
+	Factor * factor = calloc(1,sizeof(Factor));
 	factor->type = INT;
     factor->data = data;
 	return factor;
@@ -277,7 +290,7 @@ Factor * IntegerFactorGrammarAction(char * data) {
 
 Factor * StringFactorGrammarAction(char * data) {
 	LogDebug("\tStringFactorGrammarAction (%s)", data);
-	Factor * factor = malloc(sizeof(Factor));
+	Factor * factor = calloc(1,sizeof(Factor));
 	factor->type = STRING;
     factor->data = data;
 	return factor;
@@ -285,34 +298,34 @@ Factor * StringFactorGrammarAction(char * data) {
 
 Comparison * LesserConstantGrammarAction() {
 	LogDebug("\tLesserConstantGrammarAction");
-	Comparison * comp = malloc(sizeof(Comparison));
+	Comparison * comp = calloc(1,sizeof(Comparison));
 	comp->type = LT;
 	return comp;
 }
 
 Comparison * EqualConstantGrammarAction() {
 	LogDebug("\tEqualConstantGrammarAction");
-	Comparison * comp = malloc(sizeof(Comparison));
+	Comparison * comp = calloc(1,sizeof(Comparison));
 	comp->type = EQ;
 	return comp;
 }
 
 Comparison * GreaterOrEqualConstantGrammarAction() {
 	LogDebug("\tEqualConstantGrammarAction");
-	Comparison * comp = malloc(sizeof(Comparison));
+	Comparison * comp = calloc(1,sizeof(Comparison));
 	comp->type = GT;
 	return comp;
 }
 
 Comparison * LesserOrEqualConstantGrammarAction(){
-	Comparison * comp = malloc(sizeof(Comparison));
+	Comparison * comp = calloc(1,sizeof(Comparison));
 	comp->type = LTEQ;
 	return comp;
 }
 
 Comparison * NotEqualConstantGrammarAction() {
 	LogDebug("\tNotEqualConstantGrammarAction");
-	Comparison * comp = malloc(sizeof(Comparison));
+	Comparison * comp = calloc(1,sizeof(Comparison));
 	comp->type = NEQ;
 	return comp;
 }

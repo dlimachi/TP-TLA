@@ -187,7 +187,7 @@ query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME C
 request: TC_NAME												{ $$ = RequestTc_nameGrammarAction($1); }
 	|	OPEN_BRACKETS columns CLOSE_BRACKETS					{ $$ = RequestColumnsGrammarAction($2); }
 	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS			{ $$ = RequestDistinctColumnsGrammarAction($3); }
-	|	ALL														{ $$ = RequestAllGrammarAction(); }
+	|	ALL													{ $$ = RequestAllGrammarAction(); }
 	;
 
 
