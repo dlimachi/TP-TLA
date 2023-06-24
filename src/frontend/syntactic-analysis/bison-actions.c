@@ -1,9 +1,6 @@
-#include "../../backend/domain-specific/calculator.h"
-#include "../../backend/support/logger.h"
 #include "bison-actions.h"
 #include <stdio.h>
 #include <string.h>
-#include "abstract-syntax-tree.h"
 
 /**
  * Implementación de "bison-grammar.h".

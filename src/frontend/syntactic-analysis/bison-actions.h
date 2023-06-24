@@ -3,6 +3,9 @@
 
 #include "../../backend/support/shared.h"
 #include "../../backend/semantic-analysis/abstract-syntax-tree.h"
+#include "../../backend/domain-specific/calculator.h"
+#include "../../backend/support/logger.h"
+
 
 /**
  * Se definen las acciones a ejecutar sobre cada regla de producción de la
@@ -15,18 +18,46 @@
 int ProgramGrammarAction(const int value);
 int return0();
 
-// Expresión.
-int AdditionExpressionGrammarAction(const int leftValue, const int rightValue);
-int SubtractionExpressionGrammarAction(const int leftValue, const int rightValue);
-int MultiplicationExpressionGrammarAction(const int leftValue, const int rightValue);
-int DivisionExpressionGrammarAction(const int leftValue, const int rightValue);
-int FactorExpressionGrammarAction(const int value);
+//General
+General * GeneralInsertBodyGrammarAction(InsertBody * InsertBody);
+General * GeneralCreateBodyGrammarAction(CreateBody * createBody);
+General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody);
+General * GeneralCheckGrammarAction(Check * chek);
+General * GeneralQueryBodyGrammarAction(QueryBody * queryBody);
+
+//Insert
+InsertBody * InsertObjectsGrammarAction(char * tcName, Objects* objects);
+
+//Check
+Check * CheckGrammarAction(char *tc_name, CheckBody * checkBody);
+
+//CheckBody
+CheckBody * CheckConditionGrammarAction(Condition * condition);
+CheckBody * CheckAndGrammarAction(CheckBody * checkBody, Condition * condition);
+CheckBody * CheckOrGrammarAction(CheckBody * checkBody, Condition * condition);
+
+//Condition
+Condition * ConditionGrammarAction(Expression * expL, Comparison * comparison, Expression * expR);
+
+// Expression.
+Expression * ExpressionTermGrammarAction(Term * term);
+Expression * ExpressionAddGrammarAction(Expression * expression, Term * term);
+Expression * ExpressionSubGrammarAction(Expression * expression, Term * term);
+
+//Terminos
+Term * TermFactorGrammarAction(Factor * factor);
+Term * TermAllGrammarAction(Term * term , Factor * factor);
+Term * TermDivGrammarAction(Term * term , Factor * factor);
 
 // Factores.
-int ExpressionFactorGrammarAction(const int value);
-int ConstantFactorGrammarAction(const int value);
+Factor * Tc_nameFactorGrammarAction(char * data);
+Factor * IntegerFactorGrammarAction(char * data);
+Factor * StringFactorGrammarAction(char * data);
 
-// Constantes.
-int IntegerConstantGrammarAction(const int value);
-
+// Comparison
+Comparison * LesserConstantGrammarAction();
+Comparison * EqualConstantGrammarAction();
+Comparison * GreaterOrEqualConstantGrammarAction();
+Comparison * LesserOrEqualConstantGrammarAction();
+Comparison * NotEqualConstantGrammarAction();
 #endif
