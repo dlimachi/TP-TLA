@@ -12,11 +12,13 @@ int progress;
 
 stringList colsList = NULL;
 stringList valuesList = NULL;
+stringList typesList = NULL;
 
 void generatePair( Pair * pair ){
-    char aux[LEN] = {0};
 
-
+    addToList(colsList,pair->column_name);
+    addToList(valuesList,pair->column_value_string);
+    addToList(typesList, pair->type);
 
 }
 
@@ -35,11 +37,45 @@ void generateObjects( Objects * objects ){
     if (objects == NULL)
         return;
 
+    colsList = createList();
+    valuesList = createList();
+    typesList = createList();
+
     // strcat el codigo a generar sobre code
     strcat(code,"INSERT INTO ");
     strcat(code, tc_name);
 
     generatePairs(objects->object->pairs);
+
+    strcat(code,"(");
+    
+    strcat(code, colsList->string);
+    colsList = colsList->next;
+
+    while ( colsList != NULL ){
+        strcat(code,", ");
+        strcat(code,colsList->string);
+
+        colsList = colsList->next;
+
+    }
+    freeList(colsList);
+
+    strcat(code,") VALUES (");
+    
+    strcat(code, valuesList->string);
+    valuesList = valuesList->next;
+
+    while ( valuesList != NULL ){
+        strcat(code,", ");
+        strcat(code,valuesList->string);
+
+        valuesList = valuesList->next;
+
+    }
+    freeList(valuesList);
+
+    strcat(code, ");");
 
     strcat(code,"\n");
 
@@ -51,6 +87,8 @@ void generateInsert(InsertBody * insertBody) {
 	code = malloc(LEN);
     code[0] = 0;
     int progress = 0;
+
+
 
     // guardo el nombre de tabla
     strcpy(tc_name,insertBody->tc_name);
