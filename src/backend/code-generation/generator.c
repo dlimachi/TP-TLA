@@ -18,7 +18,7 @@ void Generator(Program * program) {
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
-	char * code;
+	char * code = NULL;
 
 	switch (program->general->type) {
         case(GINSERT):
@@ -45,6 +45,13 @@ void Generator(Program * program) {
 
 	//generar archivo con code
 
+	FILE * output = fopen("output.sql", "w");
+	if ( output == NULL )
+		return;
+	
+	fprintf( output, "%s", code);
+	
+	fclose(output);
 
 
 }
