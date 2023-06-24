@@ -5,6 +5,10 @@
 /**
  * Implementación de "generator.h".
  */
+void generateDelete(DeleteBody * deleteBody);
+void generateQuery(QueryBody * queryBody);
+void generateCreate(CreateBody * createBody);
+void generateCheck(Check * check);
 
 void Generator(Program * program) {
 	// Generator va a generar un archivo .sql
@@ -39,19 +43,19 @@ void generateInsert(InsertBody * insertBody) {
 
 }
 
-void generateDelete(DeleteBody * deleteBody) {
+static void generateDelete(DeleteBody * deleteBody) {
 
 }
 
-void generateQuery(QueryBody * queryBody) {
+static void generateQuery(QueryBody * queryBody) {
 
 }
 
-void generateCreate(CreateBody * createBody) {
+static void generateCreate(CreateBody * createBody) {
 
 }
 
-void generateCheck(Check * check) {
+static void generateCheck(Check * check) {
 
 }
 
