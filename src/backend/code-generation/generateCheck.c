@@ -9,7 +9,7 @@
 static char tc_name[TC_LEN];
 static int progress;
 stringList code = createList();
-
+/*
 stringList generateFactor(Factor * factor){
     if(factor == null)
         return null;
@@ -82,7 +82,7 @@ stringList generateCheckBody(CheckBody * checkBody){
     }
     return code;
 }
-
+*/
 stringList generateInsert(Check * check) {
     strcpy(tc_name,check->tc_name);
     return code;

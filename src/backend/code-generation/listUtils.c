@@ -5,7 +5,8 @@
 stringList createList(){
     stringList toReturn = malloc(sizeof(stringNode));
     toReturn->next = NULL;
-    toReturn->string = calloc(128, sizeof(char));
+    toReturn->string = calloc(128, sizeof(void *));
+    return toReturn;
 }
 
 stringList addToList( stringList list, char * string ){
