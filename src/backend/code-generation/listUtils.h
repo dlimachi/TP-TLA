@@ -8,3 +8,9 @@ typedef struct stringNode
 
 typedef stringNode * stringList;
 
+stringList createList();
+
+stringList addToList( stringList list, char * string );
+
+void freeList( stringList list );
+

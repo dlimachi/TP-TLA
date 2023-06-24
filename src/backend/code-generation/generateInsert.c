@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include <string.h>
+#include "listUtils.h"
 
 #define LEN 1024
 #define TC_LEN 128
@@ -9,21 +10,13 @@ char tc_name[TC_LEN];
 char * code;
 int progress;
 
-typedef struct stringNode
-{
-    char string[TC_LEN];
-    struct stringNode * next;
-}stringNode;
-
-typedef stringNode * stringList;
-
 stringList colsList = NULL;
 stringList valuesList = NULL;
 
 void generatePair( Pair * pair ){
     char aux[LEN] = {0};
 
-    
+
 
 }
 
