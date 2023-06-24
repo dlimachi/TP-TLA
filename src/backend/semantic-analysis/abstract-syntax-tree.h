@@ -220,19 +220,19 @@ struct Expression {
 
 struct Condition {
 	Expression * leftExpression;
-	Comparison * Comparison;
+	Comparison * comparison;
 	Expression * rightExpression;
 };
 
 struct CheckBody {
 	CheckBodyType type;
 	Condition * condition;
-	CheckBody * CheckBody;
+	CheckBody * checkBody;
 };
 
 struct Check {
 	char * tc_name;
-	CheckBody * CheckBody;
+	CheckBody * checkBody;
 };
 
 struct Request {

@@ -166,21 +166,70 @@ RequestDistinctColumnsGrammarAction($3)
 ////////////////////////////////////////////////////////////////////////////////////
 RequestAllGrammarAction()
 
-CheckGrammarAction($2, $4)
+Check * CheckGrammarAction($2, $4)
 
-CheckConditionGrammarAction($1)
+CheckBody * CheckConditionGrammarAction(Condition * condition) {
+    LogDebug("\tCheckAndGrammarAction");
+    CheckBody * check = calloc(1, sizeof(CheckBody));
+    check->type = CONDITION;
+    check->condition = condition;
+    cond->checkBody = null;
+    return check;
+}
 
-CheckAndGrammarAction($1, $3)
+CheckBody * CheckAndGrammarAction(CheckBody * checkBody, Condition * condition) {
+    LogDebug("\tCheckAndGrammarAction");
+    CheckBody * check = calloc(1, sizeof(CheckBody));
+    check->type = AND;
+    check->condition = condition;
+    cond->checkBody = checkBody;
+    return check;
+}
 
-CheckOrGrammarAction($1, $3)
+CheckBody * CheckOrGrammarAction(CheckBody * checkBody, Condition * condition) {
+    LogDebug("\tCheckOrGrammarAction");
+    CheckBody * check = calloc(1, sizeof(CheckBody));
+    check->type = OR;
+    check->condition = condition;
+    cond->checkBody = checkBody;
+    return check;
+}
 
-ConditionGrammarAction($1, $2, $3)
+Condition * ConditionGrammarAction(Expression * expL, Comparison * comparison, Expression * expR) {
+    LogDebug("\tConditionGrammarAction");
+    Condition * cond= calloc(1, sizeof(Condition));
+    cond->leftExpression = expL;
+    cond->comparison = comparison;
+    cond->rightExpression = expR;
+    return comp;
+}
 
-ExpressionTermGrammarAction($1)
+Expression * ExpressionTermGrammarAction(Term * term) {
+    LogDebug("\tExpressionTermGrammarAction");
+    Expression * exp = calloc(1, sizeof(Expression));
+    exp->type = TERM;
+    exp->expression = null;
+    exp->term = term;
+    return exp;
+}
 
-ExpressionAddGrammarAction($1,$3)
+Expression * ExpressionAddGrammarAction(Expression * expression, Term * term) {
+    LogDebug("\tExpressionAddGrammarAction");
+    Expression * exp = calloc(1, sizeof(Expression));
+    exp->type = SUB;
+    exp->expression = expression;
+    exp->term = term;
+    return exp;
+}
 
-Expression * ExpressionSubGrammarAction($1,$3)
+Expression * ExpressionSubGrammarAction(Expression * expression, Term * term){
+    LogDebug("\tExpressionSubGrammarAction");
+    Expression * exp = calloc(1, sizeof(Expression));
+    exp->type = ADD;
+    exp->expression = expression;
+    exp->term = term;
+    return exp;
+}
 
 Term * TermFactorGrammarAction(Factor * factor) {
     LogDebug("\tTermFactorGrammarAction");
@@ -188,7 +237,7 @@ Term * TermFactorGrammarAction(Factor * factor) {
     termRet->type = FACTOR;
     termRet->term = null;
     termRet->factor = factor;
-    return term;
+    return termRet;
 }
 
 Term * TermAllGrammarAction(Term * term , Factor * factor) {
@@ -197,7 +246,7 @@ Term * TermAllGrammarAction(Term * term , Factor * factor) {
     termRet->type = ALL;
     termRet->term = term;
     termRet->factor = factor;
-    return term;
+    return termRet;
 }
 
 Term * TermDivGrammarAction(Term * term , Factor * factor) {
@@ -206,7 +255,7 @@ Term * TermDivGrammarAction(Term * term , Factor * factor) {
     termRet->type = DIV;
     termRet->term = term;
     termRet->factor = factor;
-    return term;
+    return termRet;
 }
 
 Factor * Tc_nameFactorGrammarAction(char * data) {
