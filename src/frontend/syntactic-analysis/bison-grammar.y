@@ -16,10 +16,32 @@
 	*/
 
 	// No-terminales (frontend).
-	int program;
-	int INSERT_INTO;
-	int TC_NAME;
-	int CREATE;
+	Request * request;
+	Comparison * comparison;
+	Condition * condition;
+	Factor *factor;
+	Statement *statement;
+	Objects *objects;
+	Pairs *pairs;
+	Statements *statements;
+	EnumTypes *enumTypes;
+	Columns *columns;
+	CheckBody *checkBody;
+	Expression *expression;
+	Term *term;
+	Object *object;
+	Column *column;
+	Options *options;
+	SingleType *singleType;
+	Pair *pair;
+	CreateTable *createTable;
+	InsertBody *insertBody;
+	CreateBody *createBody;
+	DeleteBody *deleteBody;
+	Check *check;
+	QueryBody *queryBody;
+	General *general;
+
 	
 
 	// Terminales.
@@ -91,6 +113,31 @@
 
 // Tipos de dato para los no-terminales generados desde Bison.
 %type <program> program
+%type <request> request
+%type <comparison> comparison
+%type <condition> condition
+%type <factor> factor
+%type <statement> statement
+%type <objects> objects
+%type <pairs> pairs
+%type <statements> statements
+%type <enumTypes> enum_types
+%type <columns> columns
+%type <checkBody> check_body
+%type <expression> expression
+%type <term> term
+%type <object> object
+%type <column> column
+%type <options> options
+%type <singleType> single_type
+%type <pair> pair
+%type <createTable> create_table
+%type <insertBody> insert_body
+%type <createBody> create_body
+%type <deleteBody> delete_body
+%type <check> check
+%type <queryBody> query_body
+%type <general> general
 
 
 // El símbolo inicial de la gramatica.
@@ -228,7 +275,7 @@ comparison: GT
 	| EQ 														{ $$ = EqualConstantGrammarAction(); }
 	| GTEQ 														{ $$ = GreaterOrEqualConstantGrammarAction(); }
 	| LTEQ 														{ $$ = LesserOrEqualConstantGrammarAction(); }
-	| NEQ;														{ $$ = NotEqualConstantGrammarAction(); }
-
+	| NEQ														{ $$ = NotEqualConstantGrammarAction(); }
+	;
 %%
 

@@ -87,75 +87,71 @@ typedef struct General General;
 
 //enums a utilizar
 typedef enum {
-	GT,
-	LT,
-	EQ,
-	GTEQ,
-	LTEQ,
-	NEQ
+	CGT,
+	CLT,
+	CEQ,
+	CGTEQ,
+	CLTEQ,
+	CNEQ
 } ComparisonType;
 
 typedef enum {
-	TC_NAME,
+	FTC_NAME,
 	INT,
-	STRING
+	FSTRING
 } FactorType;
 
 typedef enum {
 	FACTOR,
-	ALL,
-	DIV //para que esta este?
+	TALL,
+	TDIV //para que esta este?
 } TermType;
 
 typedef enum {
 	TERM,
-	ADD,
-	SUB
+	EADD,
+	ESUB
 } ExpressionType;
 
 typedef enum {
 	CONDITION,
-	AND,
-	OR
+	CAND,
+	COR
 } CheckBodyType;
 
 typedef enum {
-	TC_NAME,
+	RTC_NAME,
 	COLUMNS,
 	DISTINCT_COLUMNS,
-	ALL
+	RALL
 } RequestType;
 
 typedef enum {
-	WHERE,
+	DWHERE,
 	OBJECT
 } DeleteType;
 
 typedef enum {
 	MULTIPLE,
 	SINGLE
-} ColumnsType;
+} MultiplesType;
+
 
 typedef enum {
-	MULTIPLE,
-	SINGLE
-} EnumTypesType;
-
-typedef enum {
-	NORMAL,
-	NULLABLE,
-	WITH
+	SNORMAL,
+	SNULLABLE,
+	SWITH
 } SingleTypeType;
 
 typedef enum {
-	CASCADE,
-	SET_NULL,
-	RESTRICT
+	OCASCADE,
+	OSET_NULL,
+	ORESTRICT
 } OptionsType;
 
 typedef enum {
 	NORMAL,
-	NULLABLE,
+	STNULLABLE,
 	SINGLETYPE,
 	NORMALFROM,
 	ONDELETEFROM,
@@ -165,35 +161,22 @@ typedef enum {
 } StatementType;
 
 typedef enum {
-	MULTIPLE,
-	SINGLE
-} StatementsType;
-
-typedef enum {
-	STRING,
-	INTEGER,
-	DECIMAL,
-	VTRUE,
-	VFALSE,
-	VNULL
+	PSTRING,
+	PINTEGER,
+	PDECIMAL,
+	PVTRUE,
+	PVFALSE,
+	PVNULL
 } PairType;
 
-typedef enum {
-	MULTIPLE,
-	SINGLE
-} PairsType;
+
 
 typedef enum {
-	MULTIPLE,
-	SINGLE
-} ObjectsType;
-
-typedef enum {
-	INSERT,
-	CREATE,
-	DELETE,
-	CHECK,
-	QUERY
+	GINSERT,
+	GCREATE,
+	GDELETE,
+	GCHECK,
+	GQUERY
 } GeneralType;
 
 //no terminales con diferentes reglas de prod
@@ -262,13 +245,13 @@ struct Column {
 };
 
 struct Columns {
-	ColumnsType type;
+	MultiplesType type;
 	Columns * columns;
 	Column * column;
 };
 
 struct EnumTypes {
-	EnumTypesType type;
+	MultiplesType type;
 	EnumTypes * enumTypes;
 	char * string;
 };
@@ -296,7 +279,7 @@ struct Statement {
 };
 
 struct Statements {
-	StatementsType * type;
+	MultiplesType * type;
 	Statements * statements;
 	Statement * statement;
 };
@@ -319,7 +302,7 @@ struct Pair {
 };
 
 struct Pairs {
-	PairsType type;
+	MultiplesType type;
 	Pairs * pairs;
 	Pair * Pair;
 };
@@ -329,7 +312,7 @@ struct Object {
 };
 
 struct Objects {
-	ObjectsType type;
+	MultiplesType type;
 	Objects * objects;
 	Object * object;
 };
