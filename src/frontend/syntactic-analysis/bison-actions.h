@@ -28,6 +28,73 @@ General * GeneralQueryBodyGrammarAction(QueryBody * queryBody);
 //Insert
 InsertBody * InsertObjectsGrammarAction(char * tcName, Objects* objects);
 
+//Objects
+Objects * ObjectsGrammarAction(Object * object);
+Objects * ObjectsMultipleGrammarAction(Objects * objects, Object * object);
+Object * ObjectGrammarAction(Pairs* pairs);
+
+//Pairs
+Pairs * PairsGrammarAction(Pair* pair);
+Pairs * PairsCommaGrammarAction(Pairs* pairsArg,Pair* pair);
+Pair * PairStringStringGrammarAction(char* cName,char* cValue);
+Pair * PairStringIntegerGrammarAction(char* cName,char* cValue);
+Pair * PairStringDecimalGrammarAction(char* cName,char* cValue);
+Pair * PairStringTrueGrammarAction(char* cName);
+Pair * PairStringFalseGrammarAction(char* cName);
+Pair * PairStringNullGrammarAction(char* cName);
+
+//CreateBody
+CreateBody * CreateBodyGrammarAction(CreateTable * createTable, Statements * statements);
+
+//CreateTable
+CreateTable * CreateTableNameGrammarAction(char * tcName);
+CreateTable * CreateTableUsingNameGrammarAction(char * tcName, char * keyName);
+
+//Statements
+Statements * StatementsMultipleGrammarAction(Statements * statementsArg, Statement * statement);
+Statements * StatementsSimpleGrammarAction(Statements * statementsArg, Statement * statement);
+Statement * StatementColumnsGrammarAction(Columns * columns, char * asName);
+Statement * StatementColumnsNullableGrammarAction(Columns * columns, char * asName);
+Statement * StatementSimpleGrammarAction(char * columnName, SingleType * singleType);
+Statement * StatementFromGrammarAction(char * columnName, SingleType * singleType, char * tcNameFrom, char * columnNameFrom);
+Statement * StatementOnDeleteGrammarAction(char * columnName, SingleType * singleType, char * tcNameFrom, char * columnNameFrom, Options * options);
+Statement * StatementOnUpdateGrammarAction(char * columnName, SingleType * singleType, char * tcNameFrom, char * columnNameFrom, Options * options);
+Statement * StatementColumnsAsEnumGrammarAction(Columns * columns, EnumTypes * enumTypes);
+Statement * StatementAsEnumGrammarAction(char * columnName, EnumTypes * enumTypes);
+
+//Options
+Options * OptionsCascadeGrammarAction();
+Options * OptionsSetNullGrammarAction();
+Options * OptionsRestrictGrammarAction();
+
+//SingleType
+SingleType * SingleTypeGrammarAction(char * tcName);
+SingleType * SingleTypeNullableGrammarAction(char * tcName);
+SingleType * SingleTypeWithGrammarAction(char * tcName, char * withTcName);
+
+//EnumType
+EnumTypes * EnumTypesMultipleGrammarAction(EnumTypes * enumTypesArg, char * string);
+EnumTypes * EnumTypesSingleGrammarAction(char * string);
+
+//Colums
+Columns * ColumnsMultipleGrammarAction(Columns * columns, Column * column);
+Columns * ColumnsSingleGrammarAction( Column * column);
+Column * ColumnGrammarAction( char * cName);
+Column * ColumnUniqueGrammarAction( char * cName);
+
+//DeleteBody
+DeleteBody * DeleteFromWhereGrammarAction( char * fromTable, char * conditionColumn, char * conditionString);
+DeleteBody * DeleteFromGrammarAction( char * fromTable, Object * object);
+
+//QueryBody
+QueryBody * QueryBodyGrammarAction( char * queryName, Request * request, char * tc_name, char * condition);
+
+//Request
+Request * RequestTc_nameGrammarAction( char * tcName);
+Request * RequestColumnsGrammarAction( Columns * columns);
+Request * RequestDistinctColumnsGrammarAction( Columns * columns);
+Request * RequestAllGrammarAction();
+
 //Check
 Check * CheckGrammarAction(char *tc_name, CheckBody * checkBody);
 

@@ -544,7 +544,7 @@ Request * RequestDistinctColumnsGrammarAction( Columns * columns){
 	request->columns=columns;
 	return request;
 };
-////////////////////////////////////////////////////////////////////////////////////
+
 Request * RequestAllGrammarAction() {
     LogDebug("\tRequestAllGrammarAction");
     Request * request = calloc(1, sizeof(Request));
