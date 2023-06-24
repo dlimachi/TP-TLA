@@ -3,6 +3,7 @@
 #include "bison-actions.h"
 #include <stdio.h>
 #include <string.h>
+#include "abstract-syntax-tree.h"
 
 /**
  * Implementación de "bison-grammar.h".
@@ -157,28 +158,33 @@ TermDivGrammarAction($1,$3)
 
 Tc_nameFactorGrammarAction($1)
 
-int IntegerFactorGrammarAction(int )
 
-char * StringFactorGrammarAction(char * string) {
-	LogDebug("\tStringFactorGrammarAction (%s)", string);
-	
-	return string;
+
+Comparison LesserConstantGrammarAction() {
+	LogDebug("\tLesserConstantGrammarAction");
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->ComparisonType = LT;
+	return comp;
 }
 
-LesserConstantGrammarAction()
-
-bool EqualConstantGrammarAction() {
+Comparison EqualConstantGrammarAction() {
 	LogDebug("\tEqualConstantGrammarAction");
-	return true;
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->ComparisonType = EQ;
+	return comp;
 }
 
 GreaterOrEqualConstantGrammarAction()
 
-bool LesserOrEqualConstantGrammarAction(){
-	return 
+Comparison LesserOrEqualConstantGrammarAction(){
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->ComparisonType = LTEQ;
+	return comp;
 }
 
-bool NotEqualConstantGrammarAction() {
+Comparison NotEqualConstantGrammarAction() {
 	LogDebug("\tNotEqualConstantGrammarAction");
-	return false;
+	Comparison * comp = malloc(sizeof(Comparison));
+	comp->ComparisonType = NEQ;
+	return comp;
 }
