@@ -124,9 +124,9 @@ pairs: pair														{ $$ = PairsGrammarAction($1); }
 pair: STRING COLON STRING												{ $$ = PairStringStringGrammarAction($1, $3); }
 	|	STRING COLON INTEGER											{ $$ = PairStringIntegerGrammarAction($1, $3); }
 	|	STRING COLON DECIMAL											{ $$ = PairStringDecimalGrammarAction($1, $3); }
-	|	STRING COLON VTRUE											{ $$ = PairStringTrueGrammarAction($1, $3); }
-	|	STRING COLON VFALSE											{ $$ = PairStringFalseGrammarAction($1, $3); }
-	|	STRING COLON VNULL											{ $$ = PairStringNullGrammarAction($1, $3); }
+	|	STRING COLON VTRUE											{ $$ = PairStringTrueGrammarAction($1); }
+	|	STRING COLON VFALSE											{ $$ = PairStringFalseGrammarAction($1); }
+	|	STRING COLON VNULL											{ $$ = PairStringNullGrammarAction($1); }
 	;
 
 
@@ -144,7 +144,7 @@ statements: statements COMMA statement											{ $$ = StatementsMultipleGramma
 statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME							{ $$ = StatementColumnsGrammarAction($2, $5); }
 	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE						{ $$ = StatementColumnsNullableGrammarAction($2, $5); }
 	| 	TC_NAME AS single_type											{ $$ = StatementSimpleGrammarAction($1, $3); }
-	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS				{ $$ = StatementFromGrammarAction($1, $3, $5); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS				{ $$ = StatementFromGrammarAction($1, $3, $5, $7); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	{ $$ = StatementOnDeleteGrammarAction($1, $3, $5, $7, $10); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options	{ $$ = StatementOnUpdateGrammarAction($1, $3, $5, $7, $10); }
 	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS	{ $$ = StatementColumnsAsEnumGrammarAction($2, $4); }

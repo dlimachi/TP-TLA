@@ -252,6 +252,7 @@ struct DeleteBody {
 	DeleteType type;
 	char * tc_name;
 	char * column_name;
+	char * condition_string;
 	Object * object;
 };
 
@@ -315,8 +316,6 @@ struct Pair {
 	PairType type;
 	char * column_name;
 	char * column_value_string;
-	int column_boolean;
-	Object * object;
 };
 
 struct Pairs {
