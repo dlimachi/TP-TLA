@@ -107,11 +107,11 @@ general: insert_body																						{ $$ = GeneralInsertBodyGrammarAction(
 	| query_body																							{ $$ = GeneralQueryBodyGrammarAction($1); }
 	;
 
-insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY												{ $$ = InsertObjectsGrammarAction($1); }
+insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY												{ $$ = InsertObjectsGrammarAction($2, $4); }
 	;
 
-objects: object																								{ $$ = ObjectGrammarAction($1); }
-	|	objects COMMA object																				{ $$ = PairObjectsGrammarAction($1); }
+objects: object																								{ $$ = ObjectsGrammarAction($1); }
+	|	objects COMMA object																				{ $$ = ObjectsMultipleGrammarAction($1, $3); }
 	;
 
 object:	OPEN_CURLY pairs CLOSE_CURLY																		{ $$ = ObjectGrammarAction($2); }
@@ -121,7 +121,7 @@ pairs: pair																									{ $$ = PairsGrammarAction($1); }
 	|	pairs COMMA pair																					{ $$ = PairsCommaGrammarAction($1, $3); }
 	;
 
-pair: STRING COLON STRING																					{ $$ = PairDoubleStringGrammarAction($1, $3); }
+pair: STRING COLON STRING																					{ $$ = PairStringStringGrammarAction($1, $3); }
 	|	STRING COLON INTEGER																				{ $$ = PairStringIntegerGrammarAction($1, $3); }
 	|	STRING COLON DECIMAL																				{ $$ = PairStringDecimalGrammarAction($1, $3); }
 	|	STRING COLON VTRUE																					{ $$ = PairStringTrueGrammarAction($1, $3); }
@@ -134,16 +134,16 @@ create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY											{ $
 	;
 
 create_table: TC_NAME																						{ $$ = CreateTableNameGrammarAction($1); }
-	|	TC_NAME USING_KEY TC_NAME																			{ $$ = CreateTableUsingNameGrammarAction($2); }
+	|	TC_NAME USING_KEY TC_NAME																			{ $$ = CreateTableUsingNameGrammarAction($1, $3); }
 	;
 
-statements: statements COMMA statement																		{ $$ = StatementsGrammarAction($1, $2); }
-	|	statement												
+statements: statements COMMA statement																		{ $$ = StatementsMultipleGrammarAction($1, $3); }
+	|	statement																							{ $$ = StatementsSimpleGrammarAction($1); }
 	;
 	
-statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME											{ $$ = StatementGrammarAction($1, $4); }
-	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE										{ $$ = CreateStatementNullableGrammarAction($1, $3); }
-	| 	TC_NAME AS single_type																				{ $$ = CreateStatementGrammarAction($1, $3); }
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME											{ $$ = StatementColumnsGrammarAction($2, $5); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE										{ $$ = StatementColumnsNullableGrammarAction($2, $5); }
+	| 	TC_NAME AS single_type																				{ $$ = StatementSimpleGrammarAction($1, $3); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS						{ $$ = StatementFromGrammarAction($1, $3, $5); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	{ $$ = StatementOnDeleteGrammarAction($1, $3, $5, $7, $10); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options	{ $$ = StatementOnUpdateGrammarAction($1, $3, $5, $7, $10); }
@@ -181,10 +181,10 @@ delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING		{ $$ = DeleteFromWh
 	;
 
 
-query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS	{ $$ = QueryBodyGrammarAction($4); }
+query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS	{ $$ = QueryBodyGrammarAction($2,$4,$6,$8); }
 	;
 
-request: TC_NAME
+request: TC_NAME												{ $$ = RequestTc_nameGrammarAction($1); }
 	|	OPEN_BRACKETS columns CLOSE_BRACKETS					{ $$ = RequestColumnsGrammarAction($2); }
 	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS			{ $$ = RequestDistinctColumnsGrammarAction($3); }
 	|	ALL														{ $$ = RequestAllGrammarAction(); }
