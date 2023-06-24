@@ -710,3 +710,201 @@ Comparison * NotEqualConstantGrammarAction() {
 	comp->type = CNEQ;
 	return comp;
 }
+
+void freeGeneral(General* general) {
+    if (general == NULL) {
+        return;
+    }
+
+    if (general->InsertBody != NULL) {
+        freeInsertBody(general->InsertBody);
+    }
+
+    if (general->createBody != NULL) {
+        freeCreateBody(general->createBody);
+    }
+
+    if (general->deleteBody != NULL) {
+        freeDeleteBody(general->deleteBody);
+    }
+
+    if (general->check != NULL) {
+        freeCheck(general->check);
+    }
+
+    if (general->queryBody != NULL) {
+        freeQueryBody(general->queryBody);
+    }
+
+    free(general);
+}
+
+void freeInsertBody(InsertBody* insertBody) {
+    if (insertBody == NULL) {
+        return;
+    }
+
+    free(insertBody->tc_name);
+    freeObjects(insertBody->objects);
+    free(insertBody);
+}
+
+void freeObjects(Objects* objects) {
+    if (objects == NULL) {
+        return;
+    }
+
+    freeObject(objects->object);
+    freeObjects(objects->objects);
+    free(objects);
+}
+
+void FreePair(Pair* pair) {
+    if (pair == NULL) {
+        return;
+    }
+    free(pair->column_name);
+    free(pair->column_value_string);
+    free(pair);
+}
+
+void FreePairs(Pairs* pairs) {
+    if (pairs == NULL) {
+        return;
+    }
+    FreePair(pairs->pair);
+    FreePairs(pairs->pairs);
+    free(pairs);
+}
+
+void FreeObject(Object* object) {
+    if (object == NULL) {
+        return;
+    }
+    FreePairs(object->pairs);
+    free(object);
+}
+
+void FreeObjects(Objects* objects) {
+    if (objects == NULL) {
+        return;
+    }
+    FreeObject(objects->object);
+    FreeObjects(objects->objects);
+    free(objects);
+}
+
+void FreeInsertBody(InsertBody* insertBody) {
+    if (insertBody == NULL) {
+        return;
+    }
+    free(insertBody->tc_name);
+    FreeObjects(insertBody->objects);
+    free(insertBody);
+}
+
+void FreeSingleType(SingleType* singleType) {
+    if (singleType == NULL) {
+        return;
+    }
+    free(singleType->tc_name);
+    free(singleType->with_tc_name);
+    free(singleType);
+}
+
+void FreeOptions(Options* options) {
+    if (options == NULL) {
+        return;
+    }
+    free(options);
+}
+
+void FreeEnumTypes(EnumTypes* enumTypes) {
+    if (enumTypes == NULL) {
+        return;
+    }
+    free(enumTypes->string);
+    FreeEnumTypes(enumTypes->enumTypes);
+    free(enumTypes);
+}
+
+void FreeStatement(Statement* statement) {
+    if (statement == NULL) {
+        return;
+    }
+    free(statement->column_name);
+    free(statement->as_name);
+    FreeColumns(statement->columns);
+    FreeSingleType(statement->singleType);
+    free(statement->tc_name_from);
+    free(statement->column_name_from);
+    FreeOptions(statement->options);
+    FreeEnumTypes(statement->enumTypes);
+    free(statement);
+}
+
+void FreeStatements(Statements* statements) {
+    if (statements == NULL) {
+        return;
+    }
+    FreeStatement(statements->statement);
+    FreeStatements(statements->statements);
+    free(statements);
+}
+
+void FreeCreateTable(CreateTable* createTable) {
+    if (createTable == NULL) {
+        return;
+    }
+    free(createTable->tc_name);
+    free(createTable->key_name);
+    free(createTable);
+}
+
+void FreeCreateBody(CreateBody* createBody) {
+    if (createBody == NULL) {
+        return;
+    }
+    FreeCreateTable(createBody->createTable);
+    FreeStatements(createBody->statements);
+    free(createBody);
+}
+
+void FreeGeneral(General* general) {
+    if (general == NULL) {
+        return;
+    }
+    free(general->tc_name);
+    FreeInsertBody(general->InsertBody);
+    FreeCreateBody(general->createBody);
+    FreeDeleteBody(general->deleteBody);
+    FreeCheck(general->check);
+    FreeQueryBody(general->queryBody);
+    free(general);
+}
+
+void FreeDeleteBody(DeleteBody* deleteBody) {
+    if (deleteBody == NULL) {
+        return;
+    }
+    free(deleteBody->tc_name);
+    free(deleteBody);
+}
+
+void FreeCheck(Check* check) {
+    if (check == NULL) {
+        return;
+    }
+    free(check->tc_name);
+    free(check);
+}
+
+void FreeQueryBody(QueryBody* queryBody) {
+    if (queryBody == NULL) {
+        return;
+    }
+    free(queryBody->tc_name);
+    free(queryBody->column_name);
+    FreeStatements(queryBody->statements);
+    free(queryBody);
+}
