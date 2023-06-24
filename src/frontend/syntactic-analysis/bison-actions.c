@@ -180,26 +180,33 @@ ExpressionTermGrammarAction($1)
 
 ExpressionAddGrammarAction($1,$3)
 
-ExpressionSubGrammarAction($1,$3)
+Expression * ExpressionSubGrammarAction($1,$3)
 
-Term * TermFactorGrammarAction(Factor * factor)
+Term * TermFactorGrammarAction(Factor * factor) {
+    LogDebug("\tTermFactorGrammarAction");
+    Term * termRet = malloc(sizeof(Term));
+    termRet->type = FACTOR;
+    termRet->term = null;
+    termRet->factor = factor;
+    return term;
+}
 
 Term * TermAllGrammarAction(Term * term , Factor * factor) {
     LogDebug("\tTermAllGrammarAction");
     Term * termRet = malloc(sizeof(Term));
-    termRet->tyep = ALL;
+    termRet->type = ALL;
     termRet->term = term;
     termRet->factor = factor;
-    return factor;
+    return term;
 }
 
 Term * TermDivGrammarAction(Term * term , Factor * factor) {
     LogDebug("\tTermDivGrammarAction");
     Term * termRet = malloc(sizeof(Term));
-    termRet->tyep = DIV;
+    termRet->type = DIV;
     termRet->term = term;
     termRet->factor = factor;
-    return factor;
+    return term;
 }
 
 Factor * Tc_nameFactorGrammarAction(char * data) {
