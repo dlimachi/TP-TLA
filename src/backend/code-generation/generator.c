@@ -1,6 +1,7 @@
 #include "../support/logger.h"
 #include "generator.h"
 #include "../semantic-analysis/abstract-syntax-tree.h"
+#include "generators.h"
 
 /**
  * Implementación de "generator.h".
@@ -17,9 +18,11 @@ void Generator(Program * program) {
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
+	char * code;
+
 	switch (program->general->type) {
         case(GINSERT):
-            generateInsert(program->general->insertBody);
+            code = generateInsert(program->general->insertBody);
             break;
         case(GDELETE):
             generateDelete(program->general->deleteBody);
@@ -37,27 +40,12 @@ void Generator(Program * program) {
 		    break;
 	}
 
+	printf(code);
+	LogInfo(code);
+
+	//generar archivo con code
 
 
-}
-
-void generateInsert(InsertBody * insertBody) {
-
-}
-
-static void generateDelete(DeleteBody * deleteBody) {
-
-}
-
-static void generateQuery(QueryBody * queryBody) {
-
-}
-
-static void generateCreate(CreateBody * createBody) {
-
-}
-
-static void generateCheck(Check * check) {
 
 }
 
