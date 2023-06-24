@@ -130,7 +130,7 @@ QueryBodyGrammarAction($4)
 RequestColumnsGrammarAction($2)
 
 RequestDistinctColumnsGrammarAction($3)
-
+////////////////////////////////////////////////////////////////////////////////////
 RequestAllGrammarAction()
 
 CheckGrammarAction($2, $4)
