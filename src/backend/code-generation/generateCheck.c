@@ -10,19 +10,20 @@ static char tc_name[TC_LEN];
 static int progress;
 stringList code = createList();
 /*
+
 stringList generateFactor(Factor * factor){
     if(factor == null)
         return null;
 
     switch (factor->type) {
         case (FTC_NAME):
-            strcpy(code->string, factor->data);
+            addToList(code, factor->data);
             break;
         case INT:
-            strcpy(code->string, atoi(factor->data));
+            addToList(code, atoi(factor->data));
             break;
         case STRING:
-            strcpy(code->string, factor->data);
+            addToList(code, factor->data);
             break;
     }
     return code;
@@ -34,16 +35,17 @@ void generateTerm(Term * term){
 
     switch (term->type) {
         case (FACTOR):
-            code = addToList(generateFactor(term->factor));
+            generateFactor(term->factor);
             break;
         case TALL:
-            code = addToList(generateTerm(term->term));
-            code = addToList(term->type); //deberia tener el valor de esto
-            code = addToList(generateCondition(checkBody->condition));
+            generateTerm(term->term);
+            code = addToList(code, term->type); //deberia tener el valor de esto
+            generateCondition(checkBody->condition);
             break;
         case TDIV:
-            code = addToList(generateCheckBody(checkBody->checkBody));
-            code = addToList(generateCondition(checkBody->condition));
+            generateCheckBody(checkBody->checkBody);
+            code = addToList(code, term->type); //deberia tener el valor de esto
+            generateCondition(checkBody->condition);
             break;
     }
     return code;
@@ -53,37 +55,59 @@ stringList generateExpression(Expression * expression){
     if (expression == NULL)
         return null;
 
-    generateTerm(expression->term);
+    switch (expression->type) {
+        case (TERM):
+            generateTerm(expression->term);
+            break;
+        case EADD:
+            generateExpression(expression->expression);
+            addToList(code, expression->type);
+            generateTerm(expression->term);
+            break;
+        case TDIV:
+            generateExpression(expression->expression);
+            addToList(code, expression->type);
+            generateTerm(expression->term);
+            break;
 
 }
 
-stringList generateCondition(Condition * condition){
+stringList generateComparison(Comparison * comparison){
+    return addToList(code, comparison->type);
+}
+
+void generateCondition(Condition * condition){
     if(condition == NULL)
         return null;
+    generateExpression(condition->leftExpression);
+    generateComparison(condition->comparison);
+    generateExpression(condition->rightExpression);
 }
 
 
-stringList generateCheckBody(CheckBody * checkBody){
+void generateCheckBody(CheckBody * checkBody){
     if (checkBody == NULL)
         return null;
 
     switch (checkBody->type) {
         case (CONDITION):
-            code = addToList(generateCondition(checkBody->condition));
+            generateCondition(checkBody->condition);
             break;
         case CAND:
-            code = addToList(generateCheckBody(checkBody->checkBody));
-            code = addToList(generateCondition(checkBody->condition));
+            addToList(code, checkBody->type);
+            generateCheckBody(checkBody->checkBody);
+            generateCondition(checkBody->condition);
             break;
         case COR:
-            code = addToList(generateCheckBody(checkBody->checkBody));
-            code = addToList(generateCondition(checkBody->condition));
+            addToList(code, checkBody->type);
+            generateCheckBody(checkBody->checkBody);
+            generateCondition(checkBody->condition);
             break;
     }
-    return code;
 }
-*/
-stringList generateInsert(Check * check) {
+
+stringList generateCheck(Check * check) {
     strcpy(tc_name,check->tc_name);
     return code;
 }
+*/
