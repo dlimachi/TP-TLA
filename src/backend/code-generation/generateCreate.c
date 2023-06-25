@@ -84,7 +84,7 @@ void generateSingleType(char * columnName, SingleType * singleType ){
     strcat(create_code, " ");
     stringToUpper(singleType->tc_name);
     strcat(create_code,singleType->tc_name);
-    if(key != NULL && strcmp(columnName, key)){
+    if(key != NULL && !strcmp(columnName, key)){
         strcat(create_code, " PRIMARY KEY ");
         return;
     }
@@ -96,7 +96,7 @@ void generateWithVarType(char * columnName,  char * varType ){
     stringToUpper(varType);
     //stringToUpper(singleType->tc_name)
     strcat(create_code,varType);
-    if(key != NULL && strcmp(columnName, key)){
+    if(key != NULL && !strcmp(columnName, key)){
         strcat(create_code, " PRIMARY KEY");
         return;
     }
