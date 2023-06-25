@@ -16,6 +16,10 @@ static void generateColumn( Column * column ){
 }
 
 void generateColumns( Columns * columns ){
+    query_progress = strlen(query_code);
+    if ( query_progress % CD_LEN < CD_LEN/9 )
+        query_code = realloc(query_code, CD_LEN * ++query_size);
+        
     if(columns==NULL){
         return;
     }
@@ -154,6 +158,35 @@ static void generateCondition( Condition * condition ){
     generateExpression(condition->rightExpression);
 }
 
+static void generateCheckBody( CheckBody * checkBody ){
+    query_progress = strlen(query_code);
+    if ( query_progress % CD_LEN < CD_LEN/9 )
+        query_code = realloc(query_code, CD_LEN * ++query_size);
+    
+    switch (checkBody->type)
+    {
+    case CONDITION:
+        generateCondition(checkBody->condition);
+        break;
+    case CAND:
+        
+        generateCondition(checkBody->condition);
+        strcat(query_code, " AND ");
+        generateCheckBody(checkBody->checkBody);
+        break;
+    case COR:
+        generateCondition(checkBody->condition);
+        strcat(query_code, " OR ");
+        generateCheckBody(checkBody->checkBody);
+        break;
+    
+    default:
+        break;
+    }
+
+    
+}
+
 char * generateQuery( QueryBody * queryBody ){
     query_code = malloc(CD_LEN);
     query_size = 1;
@@ -166,7 +199,7 @@ char * generateQuery( QueryBody * queryBody ){
     if ( queryBody->condition != NULL )
     {
         strcat(query_code, " WHERE ");
-        generateCondition(queryBody->condition);
+        generateCheckBody(queryBody->condition);
     }
     strcat(query_code,";");
     return query_code;

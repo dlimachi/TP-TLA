@@ -90,7 +90,7 @@ DeleteBody * DeleteFromWhereGrammarAction( char * fromTable, char * conditionCol
 DeleteBody * DeleteFromGrammarAction( char * fromTable, Object * object);
 
 //QueryBody
-QueryBody * QueryBodyGrammarAction( char * queryName, Request * request, char * tc_name, Condition * condition);
+QueryBody * QueryBodyGrammarAction( char * queryName, Request * request, char * tc_name, CheckBody * condition);
 
 //Request
 Request * RequestTc_nameGrammarAction( char * tcName);

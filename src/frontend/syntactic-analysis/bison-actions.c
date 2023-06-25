@@ -530,7 +530,7 @@ DeleteBody * DeleteFromGrammarAction( char * fromTable, Object * object){
 	return deleteBody;
 };
 
-QueryBody * QueryBodyGrammarAction( char * queryName, Request * request, char * tc_name, Condition * condition){
+QueryBody * QueryBodyGrammarAction( char * queryName, Request * request, char * tc_name, CheckBody * condition){
 	LogDebug("\tInsertObjectsGrammarAction");	
 	QueryBody * queryBody = calloc(1,sizeof(QueryBody));
 	queryBody->query_name=queryName;

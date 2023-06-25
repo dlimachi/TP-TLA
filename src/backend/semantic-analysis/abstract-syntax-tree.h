@@ -177,7 +177,7 @@ struct QueryBody {
 	char * query_name;
 	Request * request;
 	char * tc_name;
-	Condition * condition; //chequear esto?
+	CheckBody * condition; //chequear esto?
 };
 
 struct DeleteBody {
