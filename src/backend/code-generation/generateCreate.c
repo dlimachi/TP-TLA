@@ -197,5 +197,7 @@ char * generateCreate( CreateBody * createBody ){
     strcat(create_code," ( \n\t");
     generateStatements(createBody->statements);
     strcat(create_code, "\n);");
-    return create_code;
+    strcat(enums, "\n\n");
+    strcat(enums, create_code);
+    return enums;
 }
