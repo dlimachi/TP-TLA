@@ -14,8 +14,12 @@
  */
 
 // Programa.
-int ProgramGrammarAction(const int value);
+Program * ProgramGrammarAction(Generals * generals);
 int return0();
+
+//Generals
+Generals * GeneralGrammarAction( General * general );
+Generals * GeneralMultipleGrammarAction( General * general , Generals * generals);
 
 //General
 General * GeneralInsertBodyGrammarAction(InsertBody * InsertBody);
