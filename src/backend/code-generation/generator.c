@@ -54,6 +54,8 @@ void Generator(Program * program) {
 		strcat(codeFinal,"\n");
 		strcat(codeFinal,codeAux);
 
+		// ACA!
+
 		if ( toProcess->type == MULTIPLE )
 			toProcess = toProcess->generals;
 		else
