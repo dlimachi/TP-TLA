@@ -2,6 +2,7 @@
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include <string.h>
 #include "listUtils.h"
+#include "generators.h"
 
 #define CD_LEN 1024
 #define TC_LEN 128
@@ -16,10 +17,27 @@ stringList valuesList = NULL;
 stringList typesList = NULL;
 
 void generatePair( Pair * pair ){
+    if(pair==NULL){
+        return;
+    }
 
     addToList(colsList,pair->column_name);
-    addToList(valuesList,pair->column_value_string);
-    addToList(typesList, pair->type);
+    switch(pair->type){
+        case(PVTRUE):
+            addToList(valuesList,"true");
+            break;
+        case(PVFALSE):
+            addToList(valuesList,"false");
+            break;
+        case(PVNULL):
+            addToList(valuesList,"null");
+            break;
+        default:
+            
+            addToList(valuesList,replaceQuotes(pair->column_value_string));
+            break;
+    }
+    addToList(typesList, "pair->type");
 
 }
 
@@ -27,17 +45,17 @@ void generatePairs( Pairs * pairs ){
     if ( pairs == NULL )
         return;
 
+    generatePairs(pairs->pairs);
     generatePair( pairs->pair );
 
-    generatePairs(pairs->pairs);
 
 }
 
 void generateObjects( Objects * objects ){
-
-    if (objects == NULL)
+    if (objects == NULL){
         return;
-
+    }
+    generateObjects(objects->objects);
     colsList = createList();
     valuesList = createList();
     typesList = createList();
@@ -49,9 +67,7 @@ void generateObjects( Objects * objects ){
     progress = strlen(code);
     if ( progress % CD_LEN < CD_LEN/9 )
         code = realloc(code, CD_LEN * ++size);
-
     generatePairs(objects->object->pairs);
-
     strcat(code,"(");
     
     strcat(code, colsList->string);
@@ -60,16 +76,19 @@ void generateObjects( Objects * objects ){
     progress = strlen(code);
     if ( progress % CD_LEN < CD_LEN/9 )
         code = realloc(code, CD_LEN * ++size);
-
+    int i = 0;
     while ( colsList != NULL ){
-        strcat(code,", ");
-        strcat(code,colsList->string);
+        if(i>0){
+            strcat(code,", ");
+        }
+        strcat(code,remover_comillas_extremos(colsList->string));
 
         progress = strlen(code);
         if ( progress % CD_LEN < CD_LEN/9 )
             code = realloc(code, CD_LEN * ++size);
 
         colsList = colsList->next;
+        i++;
 
     }
     freeList(colsList);
@@ -86,9 +105,11 @@ void generateObjects( Objects * objects ){
     progress = strlen(code);
     if ( progress % CD_LEN < CD_LEN/9 )
         code = realloc(code, CD_LEN * ++size);
-
+    i=0;
     while ( valuesList != NULL ){
-        strcat(code,", ");
+        if (i>0){
+            strcat(code,", ");
+        }
         strcat(code,valuesList->string);
 
         progress = strlen(code);
@@ -96,6 +117,7 @@ void generateObjects( Objects * objects ){
             code = realloc(code, CD_LEN * ++size);
 
         valuesList = valuesList->next;
+        i++;
 
     }
     freeList(valuesList);
@@ -104,24 +126,19 @@ void generateObjects( Objects * objects ){
 
     strcat(code,"\n");
 
-    // recursividad
-    generateObjects(objects->objects);
 }
 
 char * generateInsert(InsertBody * insertBody) {
 	code = malloc(CD_LEN);
     size = 1;
     code[0] = 0;
+    code[CD_LEN]=0;
     int progress = 0;
-
-
 
     // guardo el nombre de tabla
     strcpy(tc_name,insertBody->tc_name);
-
     // creo un insert --> \n --> siguiente insert
     generateObjects(insertBody->objects);
-
     return code;
     
 }

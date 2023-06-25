@@ -83,7 +83,7 @@ General * GeneralCreateBodyGrammarAction(CreateBody * createBody){
 General * GeneralDeleteBodyGrammarAction(DeleteBody * deleteBody){
 	LogDebug("\tGeneralInsertBodyGrammarAction");
 	General * general = calloc(1,sizeof(General));
-	general->type = GCREATE;
+	general->type = GDELETE;
 	general->insertBody = NULL;
 	general->createBody = NULL;
 	general->deleteBody = deleteBody;

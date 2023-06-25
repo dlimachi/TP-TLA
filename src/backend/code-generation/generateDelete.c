@@ -25,28 +25,29 @@ void generateWhereDelete(char * column, char * condition){
     progress += strlen(aux);
 
     strcat(code, aux);
-    strcat(code, " ");
+    strcat(code, " = ");
 
-    char * aux = remover_comillas_extremos(condition);
-    progress += strlen(aux);
+    char * aux2 = replaceQuotes(condition);
+    progress += strlen(aux2);
 
-    strcat(code, aux);
+    strcat(code, aux2);
     strcat(code, ";");
 }
 
 void generatePair( Pair * pair ){
-
+    if(pair->column_name==NULL){
+        return;
+    }
     char * aux = remover_comillas_extremos(pair->column_name);
     progress += strlen(aux);
 
     strcat(code, aux);
     strcat(code, " = ");
 
-
     switch (pair->type)
     {
     case PSTRING:
-        strcat(code, modificar_comillas(pair->column_value_string));
+        strcat(code, replaceQuotes(pair->column_value_string));
         break;
     case PINTEGER:
         strcat(code, remover_comillas_extremos(pair->column_value_string));
@@ -73,9 +74,8 @@ void generatePair( Pair * pair ){
 void generatePairs( Pairs * pairs ){
     if ( pairs == NULL )
         return;
-
+        
     generatePair( pairs->pair );
-    
     if ( pairs->pairs != NULL )
     {
         strcat(code, " AND ");
@@ -89,7 +89,6 @@ void generateObjectDelete( Object * object ){
     strcat(code,tc_name);
     strcat(code," WHERE ");
     int progress = 13 + 7 + strlen(tc_name);
-
     generatePairs(object->pairs);
 
 }
@@ -97,9 +96,7 @@ void generateObjectDelete( Object * object ){
 char * generateDelete( DeleteBody * deleteBody ){
     code = malloc(CD_LEN);
     size = 1;
-    
     strcpy(tc_name, deleteBody->tc_name);
-
     switch (deleteBody->type)
     {
     case DWHERE:
@@ -113,4 +110,5 @@ char * generateDelete( DeleteBody * deleteBody ){
     default:
         break;
     }
+    return code;
 }
