@@ -19,7 +19,7 @@ void generateColumns( Columns * columns ){
     query_progress = strlen(query_code);
     if ( query_progress % CD_LEN < CD_LEN/9 )
         query_code = realloc(query_code, CD_LEN * ++query_size);
-        
+
     if(columns==NULL){
         return;
     }
@@ -198,8 +198,9 @@ char * generateQuery( QueryBody * queryBody ){
     strcat(query_code, queryBody->tc_name);
     if ( queryBody->condition != NULL )
     {
-        strcat(query_code, " WHERE ");
+        strcat(query_code, " WHERE ( ");
         generateCheckBody(queryBody->condition);
+        strcat(query_code, " )");
     }
     strcat(query_code,";");
     return query_code;
