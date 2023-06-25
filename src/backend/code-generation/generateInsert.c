@@ -126,7 +126,7 @@ static void generateObjects( Objects * objects ){
 }
 
 char * generateInsert(InsertBody * insertBody) {
-	insert_code = malloc(CD_LEN);
+	insert_code = calloc(1,CD_LEN);
     insert_size = 1;
     insert_code[0] = 0;
     insert_code[CD_LEN]=0;
