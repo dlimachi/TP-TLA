@@ -148,12 +148,14 @@ static void generateFactor( Factor * factor ){
     switch (factor->type)
     {
     case FTC_NAME:
+        LogInfo("Hola que tal!");
         strcat(check_code, remover_comillas_extremos(factor->data));
         break;
     case INT:
         strcat(check_code, remover_comillas_extremos(factor->data));
         break;
     case FSTRING:
+        LogInfo("Hola que tal!");
         strcat(check_code, modificar_comillas(factor->data));
         break;
     default:
@@ -207,6 +209,7 @@ static void generateExpression( Expression * expression ){
 
 static void generateCondition( Condition * condition ){
     generateExpression(condition->leftExpression);
+    LogInfo("Hola que tal!");
     generateComparisson(condition->comparison);
     generateExpression(condition->rightExpression);
 }
@@ -222,7 +225,9 @@ static void generateCheckBody( CheckBody * checkBody ){
         generateCondition(checkBody->condition);
         break;
     case CAND:
+        
         generateCondition(checkBody->condition);
+        LogInfo("Hola que tal!");
         strcat(check_code, " AND ");
         generateCheckBody(checkBody->checkBody);
         break;
@@ -241,7 +246,7 @@ static void generateCheckBody( CheckBody * checkBody ){
 
 
 char * generateCheck( Check * check ){
-    LogInfo("Hola1");
+    
     check_code = malloc(CD_LEN);
     check_size = 1;
     check_code[0] = 0;
@@ -256,6 +261,7 @@ char * generateCheck( Check * check ){
 
 
     strcat(check_code, "( ");
+    
     generateCheckBody( check->checkBody );
     strcat(check_code, " )");
 

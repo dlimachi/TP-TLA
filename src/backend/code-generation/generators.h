@@ -1,4 +1,8 @@
 #include "../semantic-analysis/abstract-syntax-tree.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "../support/logger.h"
 
 char * generateDelete(DeleteBody * deleteBody);
 char * generateQuery(QueryBody * queryBody);
