@@ -118,6 +118,7 @@ stringList generateCheck(Check * check) {
 */
 
 static void generateComparisson( Comparison * comparison ){
+    LogInfo("entrando a un comparisson!");
     switch (comparison->type)
     {
     case CGT:
@@ -140,15 +141,17 @@ static void generateComparisson( Comparison * comparison ){
         break;
     
     default:
+        LogInfo("ACA ESTA TODO MAL!");
         break;
     }
 }
 
 static void generateFactor( Factor * factor ){
+    LogInfo("entrando a un factor!");
     switch (factor->type)
     {
     case FTC_NAME:
-        LogInfo("Hola que tal!");
+        
         strcat(check_code, remover_comillas_extremos(factor->data));
         break;
     case INT:
@@ -159,11 +162,13 @@ static void generateFactor( Factor * factor ){
         strcat(check_code, modificar_comillas(factor->data));
         break;
     default:
+        LogInfo("ACA ESTA TODO MAL!");
         break;
     }
 }
 
 static void generateTerm( Term * term ){
+    LogInfo("entrando a un term!");
     switch (term->type)
     {
     case TALL:
@@ -181,11 +186,13 @@ static void generateTerm( Term * term ){
         break;
     
     default:
+        LogInfo("ACA ESTA TODO MAL!");
         break;
     }
 }
 
 static void generateExpression( Expression * expression ){
+    LogInfo("entrando a un expression!");
     switch (expression->type)
     {
     case TERM:
@@ -203,11 +210,13 @@ static void generateExpression( Expression * expression ){
         break;
     
     default:
+        LogInfo("ACA ESTA TODO MAL!");
         break;
     }
 }
 
 static void generateCondition( Condition * condition ){
+    LogInfo("entrando a un condition!");
     generateExpression(condition->leftExpression);
     LogInfo("Hola que tal!");
     generateComparisson(condition->comparison);
@@ -215,6 +224,7 @@ static void generateCondition( Condition * condition ){
 }
 
 static void generateCheckBody( CheckBody * checkBody ){
+    LogInfo("entrando a un checkBody!");
     check_progress = strlen(check_code);
     if ( check_progress % CD_LEN < CD_LEN/9 )
         check_code = realloc(check_code, CD_LEN * ++check_size);
@@ -238,6 +248,7 @@ static void generateCheckBody( CheckBody * checkBody ){
         break;
     
     default:
+        LogInfo("ACA ESTA TODO MAL!");
         break;
     }
 
