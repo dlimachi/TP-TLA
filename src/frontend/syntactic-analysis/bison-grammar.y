@@ -195,7 +195,7 @@ statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME							{ $$ = St
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS				{ $$ = StatementFromGrammarAction($1, $3, $5, $7); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	{ $$ = StatementOnDeleteGrammarAction($1, $3, $5, $7, $10); }
 	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options	{ $$ = StatementOnUpdateGrammarAction($1, $3, $5, $7, $10); }
-	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS	{ $$ = StatementColumnsAsEnumGrammarAction($2, $4); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS	{ $$ = StatementColumnsAsEnumGrammarAction($2, $6); }
 	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS						{ $$ = StatementAsEnumGrammarAction($1, $4); }
 	;
 
