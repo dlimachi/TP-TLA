@@ -70,7 +70,7 @@ char * generateQuery( QueryBody * queryBody ){
     if ( queryBody->condition != NULL )
     {
         strcat(query_code, " WHERE ");
-        strcat(query_code, queryBody->condition);
+        generateCondition(queryBody->condition);
     }
 
     return query_code;

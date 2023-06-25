@@ -235,7 +235,7 @@ delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING								{ $$ = Delete
 	;
 
 
-query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA TC_NAME CLOSE_PARENTHESIS			{ $$ = QueryBodyGrammarAction($2,$4,$6,$8); }
+query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA condition CLOSE_PARENTHESIS			{ $$ = QueryBodyGrammarAction($2,$4,$6,$8); }
 	;
 
 request: TC_NAME													{ $$ = RequestTc_nameGrammarAction($1); }
