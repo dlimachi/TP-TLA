@@ -42,7 +42,7 @@ Luego se deberá abrir la solución generada `bin\Compiler.sln` con el IDE _Micr
 
 ## **Introducción**
 
-El objetivo principal del proyecto es desarrollar un lenguaje que permita generar un archivo .sql a partir de un archivo .txt.
+El objetivo principal del proyecto es desarrollar un lenguaje que permita generar un archivo .sql a partir de un program.
 
 Nuestro lenguaje permite crear 5 tipos de consultas: intert into, delete, create, check y query, los cuales son muy conocidos en el lenguaje sql.
 
