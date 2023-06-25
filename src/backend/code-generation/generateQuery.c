@@ -15,18 +15,16 @@ static void generateColumn( Column * column ){
 
 }
 
-static void generateColumns( Columns * columns ){
+void generateColumns( Columns * columns ){
+    if(columns==NULL){
+        return;
+    }
+    generateColumns(columns->columns);
     switch (columns->type)
     {
     case MULTIPLE:
-        strcat(query_code, "( ");
-        generateColumn(columns->column);
-        columns = columns->columns;
         strcat(query_code, ",");
-        while( columns != NULL ){
-            generateColumn(columns->column);
-            columns = columns->columns;
-        }
+        generateColumn(columns->column);
         break;
     case SINGLE:
         generateColumn(columns->column);
@@ -36,30 +34,24 @@ static void generateColumns( Columns * columns ){
     }
 }
 
-static void generateRequest( Request * request ){
+void generateRequest( Request * request ){
     switch (request->type)
     {
     case RTC_NAME:
         generateColumns(request->columns);
         strcat(query_code, " FROM ");
-        strcat(query_code, request->tc_name);
         break;
     case COLUMNS:
         generateColumns(request->columns);
         strcat(query_code, " FROM ");
-        strcat(query_code, request->tc_name);
         break;
     case DISTINCT_COLUMNS:
-        strcat(query_code, " * FROM ");
-        strcat(query_code, request->tc_name);
-        strcat(query_code, " EXCEPT SELECT ");
+        strcat(query_code, "DISTINCT ");
         generateColumns(request->columns);
         strcat(query_code, " FROM ");
-        strcat(query_code, request->tc_name);
         break;
     case RALL:
         strcat(query_code, "* FROM ");
-        strcat(query_code, request->tc_name);
         break;    
     default:
         break;
@@ -73,9 +65,8 @@ char * generateQuery( QueryBody * queryBody ){
     int query_progress = 0;
 
     strcat(query_code, "SELECT ");
-
     generateRequest(queryBody->request);
-
+    strcat(query_code, queryBody->tc_name);
     if ( queryBody->condition != NULL )
     {
         strcat(query_code, " WHERE ");
