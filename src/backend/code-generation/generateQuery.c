@@ -72,6 +72,6 @@ char * generateQuery( QueryBody * queryBody ){
         strcat(query_code, " WHERE ");
         strcat(query_code, queryBody->condition);
     }
-
+    strcat(query_code,";");
     return query_code;
 }

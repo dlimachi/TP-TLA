@@ -125,6 +125,7 @@ Factor * IntegerFactorGrammarAction(char * data);
 Factor * StringFactorGrammarAction(char * data);
 
 // Comparison
+Comparison * GreaterConstantGrammarAction();
 Comparison * LesserConstantGrammarAction();
 Comparison * EqualConstantGrammarAction();
 Comparison * GreaterOrEqualConstantGrammarAction();
