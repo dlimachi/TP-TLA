@@ -5,6 +5,18 @@ INSERT INTO employees_table {
 {"name":"Jai", "email":"jai87@gmail.com", "age":null, "salary": 40000, "is_manager": false}
 }
 
+CREATE clientes_table USING KEY codigo{
+    (codigo, UNIQUE dni) AS integer,
+    phone AS integer,
+    address AS string
+}
+
+DELETE FROM employees WHERE mail = "jai@gmail.com"
+
+
+QUERY queryName ([id, name], nombreTabla, id < 100 AND name == "Juan")
+
+CHECK check1 { var < 100 AND var > 5 }
 
 DELETE FROM employees {"email":"jai@gmail.com", "phone": "127247292"}
 

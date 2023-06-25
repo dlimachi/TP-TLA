@@ -73,7 +73,7 @@ static void generateComparisson( Comparison * comparison ){
         strcat(query_code, " < ");
         break;
     case (CEQ):
-        strcat(query_code, " == ");
+        strcat(query_code, " = ");
         break;
     case (CGTEQ):
         strcat(query_code, " >= ");
