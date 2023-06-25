@@ -26,7 +26,6 @@ static void generateWhereDelete(char * column, char * condition){
     delete_progress += strlen(aux2);
 
     strcat(delete_code, aux2);
-    strcat(delete_code, ";");
 }
 
 static void generatePair( Pair * pair ){
