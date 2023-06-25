@@ -245,8 +245,8 @@ check:
 
 check_body:
     condition														{ $$ = CheckConditionGrammarAction($1); }
-    | check_body AND condition												{ $$ = CheckAndGrammarAction($1, $3); }
-    | check_body OR condition												{ $$ = CheckOrGrammarAction($1, $3); }
+    | condition AND check_body												{ $$ = CheckAndGrammarAction($1, $3); }
+    | condition OR check_body												{ $$ = CheckOrGrammarAction($1, $3); }
     ;
 
 condition:
