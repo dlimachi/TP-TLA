@@ -1,0 +1,6 @@
+INSERT INTO employees_table {
+{"name":"Shyam", "email":"awal@gmail.com", "age":28, "salary": 50000.50, "is_manager": false},
+{"name":"Bob", "email":"bob32@gmail.com", "age":32, "salary": 65000.75, "is_manager": true},
+{"name":"Jai", "email":"jai87@gmail.com", "age":22, "salary": 40000.0, "is_manager": false},
+{"name":"Jai", "email":"jai87@gmail.com", "age":null, "salary": 40000, "is_manager": false}
+}

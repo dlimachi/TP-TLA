@@ -1,0 +1,32 @@
+INSERT INTO employees_table {
+{"name":"Shyam", "email":"awal@gmail.com", "age":28, "salary": 50000.50, "is_manager": false},
+{"name":"Bob", "email":"bob32@gmail.com", "age":32, "salary": 65000.75, "is_manager": true},
+{"name":"Jai", "email":"jai87@gmail.com", "age":22, "salary": 40000.0, "is_manager": false},
+{"name":"Jai", "email":"jai87@gmail.com", "age":null, "salary": 40000, "is_manager": false}
+}
+
+CREATE clientes_table USING KEY codigo{
+    (codigo, UNIQUE dni) AS integer,
+    phone AS integer,
+    address AS string
+}
+
+DELETE FROM employees WHERE mail = "jai@gmail.com"
+
+
+QUERY queryName ([id, name], nombreTabla, id < 100 AND name == "Juan")
+
+CHECK check1 { var < 100 AND var > 5 }
+
+DELETE FROM employees {"email":"jai@gmail.com", "phone": "127247292"}
+
+CREATE clientes_banco USING KEY codigo {
+    (codigo, UNIQUE dni) AS integer,
+    (nombre, direccion) AS string?,
+    (telefono) AS string,
+    codigo_externo AS integer FROM tabla_externa(codigo),
+    codigo_externo2 AS integer FROM tabla_externa2(codigo) ON DELETE SET NULL,
+    (genero, genero2) AS ENUM ("FEMALE", "MALE", "OTHER"),
+    status AS ENUM ("VERY RICH", "RICH", "NOT SO RICH", "NOT RICH AT ALL"),
+    algoMas AS integer
+}

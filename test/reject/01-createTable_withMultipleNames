@@ -1,0 +1,8 @@
+CREATE clientes_banco clientes_banco2 USING KEY codigo {
+    (codigo, UNIQUE dni) AS integer,
+    (nombre, direccion) AS string?,
+    (telefono) AS string,
+    codigo_externo AS integer FROM tabla_externa(codigo),
+    codigo_externo2 AS integer FROM tabla_externa2(codigo) ON DELETE SET NULL,
+    (genero) AS ENUM ("FEMALE", "MALE")
+}

@@ -20,3 +20,5 @@ bison-parser.c
 bison-parser.h
 flex-scanner.c
 program
+
+output.sql

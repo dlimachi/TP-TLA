@@ -1,0 +1,1 @@
+DELETE FROM employees {"email":"jai@gmail.com", "phone": "127247292"}

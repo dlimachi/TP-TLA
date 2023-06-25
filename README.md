@@ -2,8 +2,6 @@
 
 # Compilador Flex/Bison
 
-Un compilador vacío de ejemplo construido con Flex y Bison.
-
 ## Requerimientos
 
 Para construir el compilador, se requieren las siguientes dependencias:
@@ -33,40 +31,94 @@ user@machine:path/ $ script\build.bat
 
 Luego se deberá abrir la solución generada `bin\Compiler.sln` con el IDE _Microsoft Visual Studio 2022_. Los ejecutables que este sistema construye se depositan dentro del directorio `bin\Debug` y `bin\Release`, según corresponda.
 
-## Ejecución
+## TP TLA 1° Cuatrimestre 2023
 
-Para compilar un programa, primero cree un archivo vacío denominado `program` (o el nombre que desee), con el siguiente contenido:
+| Nombre | Apellido | Legajo | E-mail |
+| --- | --- | --- | --- |
+| Matias Ezequiel | Daneri | 60798 | mdaneri@itba.edu.ar |
+| Desiree Melisa | Limachi | 59463 | dlimachi@itba.edu.ar |
+| Juan Adolfo | Rosauer Herrmann | 61240 | jurosauer@itba.edu.ar |
+| Nicolás | Suarez Durrels | 62468 | nsuarezdurrels@itba.edu.ar |
 
+## **Introducción**
+
+El objetivo principal del proyecto es desarrollar un lenguaje que permita generar un archivo .sql a partir de un archivo .txt.
+
+Nuestro lenguaje permite crear 5 tipos de consultas: intert into, delete, create, check y query, los cuales son muy conocidos en el lenguaje sql.
+
+Con este programa buscamos solucionar el problema de la dificultad que puede llegar a ser para algunas personas crear estas consultas, facilitandoles usando la misma.
+
+
+
+## Consideraciones
+
+Como se menciono en la corrección de la primera entrega, teníamos algunos token con espacios, por lo que decidimos corregir los mismos, logrando aun aceptar los mismos tests.
+
+## Desarrollo del proyecto
+
+### Frontend
+
+La primer entrega consistió en la creación de la gramática y el uso de las herramientas Flex y Bison para que un texto de entrada pueda ser tokenizado y se pueda saber si pertenece o no al lenguaje generado por nuestra gramática.
+
+Durante la entrega de la idea del proyecto y la entrega del frontend, se realizaron cambios de como se realiza una query, ya que la misma se veia confusa y disminua la usabilidad del proyecto.
+
+Se demostró el mismo con trece tests, en los cuales vimos como se acepto y rechazo correctamente las gramáticas. Los mismos podrán ser encontrados  en la carpeta ‘test’ para poder probar el lenguaje creado.v
+
+La cadena de pasos seguida por el Frontend fue:
+
+- El analizador léxico (Flex) tokeniza la cadena de entrada
+- El analizador sintáctico (Bison) se fija que la cadena de entrada tokenizada pertenezca al lenguaje
+- Si Flex y Bison no devuelven error, se delega la creación del código HTML y Javascript al backend
+
+Los test se pueden correr de la siguiente manera:
+
+```powershell
+Linux:
+./script/test.sh
 ```
-123123 + 123 - 2 * (454 + 890 / 89)
-```
-
-Luego, ejecute el compilador desde el directorio raíz del proyecto, o desde cualquier otro lugar indicando el path hacia el script `start.sh` y pasando por parámetro el path hacia el programa a compilar:
 
 ```bash
-user@machine:path/ $ script/start.sh program
+Windows:
+./script/test.bat
 ```
 
-En Windows:
+### Backend
+
+Para la segunda entrega se decidió utilizar distintos generadores de código por cada tipo de consulta, por lo cual se decidirá el uso del mismo en el generador principal.
+
+En esta entrega, tuvimos que tambien realizar cambios de la entrega pasada, ya que encontrabamos ambigüedades en la gramatica, lo cual complicaba el recorrido del árbol, esto nos ayudo a poder avanzar en los generadores.
+
+- Podemos preguntarnos por que tantos generadores, esta decisión se tomo por el formato de árbol que tomamos, como cada consulta tiene mas de una producción seria muy util poder recorrer de forma recursiva al mismo, buscando las producciones correspondientes de cada consulta.
+## Uso del programa
+
+Para utilizar el programa de debe correr dependiendo el SO utilizado:
 
 ```bash
-user@machine:path/ $ script\start.bat program
+Linux:
+./script/start.sh <program>
 ```
-
-Debería obtener el resultado correcto de evaluar el programa anterior: `122318`.
-
-## Testing
-
-En Linux:
 
 ```bash
-user@machine:path/ $ script/test.sh
+Windows:
+.\script\start.bat <program>
 ```
 
-En Windows:
+Abrir el archivo .txt ubicado en la carpeta donde se corrió el programa.
 
-```bash
-user@machine:path/ $ script\test.bat
-```
+## Dificultades encontradas:
 
-Si desea agregar nuevos casos de uso, deberá crear un archivo por cada uno, que contenga el programa a testear dentro de las carpetas `test/accept` o `test/reject` según corresponda (es decir, si el mismo debe ser aceptado o rechazado por el compilador).
+En un primer lugar, surgieron dificultades a la hora de elegir una gramática para el trabajo practico, se tuvieron más de una idea en mente, por lo cual como grupo se tomó la decisión de elegir por voto de la mayoría.
+
+A la hora de avanzar en el proyecto, tuvimos una dificultad a la hora de concatenar consultas, al inicio al proponer la idea lo vimos como algo bueno e importante a la hora de ayudar a gente que quizá no entienda como creas consultas. Pero desde el lado de frontend y backend fue mas difícil cumplir el requisito, de todas formas superamos el desafio cumpliendo el requerimiento.
+
+## Futuras extensiones
+
+Algunas posibles extensiones que nos propusimos son las siguientes:
+
+- Aceptar consultas con UNION e INNER JOIN en este proyecto lo descartamos por la complejidad que previmos del mismo, como no guardamos los datos de 2 tablas para unir, no seria posible realizarlo, una posible solución podría ser que concatenemos las consultas de CREATE con estas mismas.
+- Aceptar consultas con Group By, como mencionamos anteriormente, descartamos la idea también por los tiempos que veiamos que tendriamos, quiza esta idea sea menos compleja que la mencionada anteriormente.
+
+## Conclusión
+
+Para finalizar, consideramos que fue un proyecto bastante interesante y no fue sencillo. Tuvimos modificaciones de la primer a segunda entrega para poder optimizar los casos de uso y la comprensión del lado del usuario.
+El trabajo practico nos ayudo a entender con mas claridad los conceptos vistos en clase y como aplicarlos, lo cual fue muy útil para cerrar la materia.

@@ -61,14 +61,21 @@ endif ()
 add_executable(Compiler
 	src/main.c
 	src/backend/code-generation/generator.c
-	src/backend/domain-specific/calculator.c
 	src/backend/support/logger.c
 	src/frontend/lexical-analysis/flex-actions.c
 	src/frontend/lexical-analysis/flex-scanner.c
 	src/frontend/syntactic-analysis/bison-actions.c
 	src/frontend/syntactic-analysis/bison-parser.c
+
 	# Agregar otros archivos *.c (si no se incluyen, no se compilan).
 	# ...
+	src/backend/code-generation/generateCheck.c
+	src/backend/code-generation/generateDelete.c
+	src/backend/code-generation/generateInsert.c
+	src/backend/code-generation/generateQuery.c
+
+	src/backend/code-generation/listUtils.c
+	src/backend/code-generation/generateCreate.c
 )
 
 # Linkear el proyecto y sus librerías.

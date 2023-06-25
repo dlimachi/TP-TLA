@@ -16,19 +16,43 @@
 	*/
 
 	// No-terminales (frontend).
-	int program;
-	int expression;
-	int factor;
-	int constant;
-	int INSERT_INTO;
+	Request * request;
+	Comparison * comparison;
+	Condition * condition;
+	Factor *factor;
+	Statement *statement;
+	Objects *objects;
+	Pairs *pairs;
+	Statements *statements;
+	EnumTypes *enumTypes;
+	Columns *columns;
+	CheckBody *checkBody;
+	Expression *expression;
+	Term *term;
+	Object *object;
+	Column *column;
+	Options *options;
+	SingleType *singleType;
+	Pair *pair;
+	CreateTable *createTable;
+	InsertBody *insertBody;
+	CreateBody *createBody;
+	DeleteBody *deleteBody;
+	Check *check;
+	QueryBody *queryBody;
+	General *general;
+	Generals *generals;
+	Program * program;
+
+	
 
 	// Terminales.
 	token token;
-	int integer;
+	char* integer;
 
 
 	char *string;
-    double decimal;
+    char* decimal;
 }
 
 // IDs y tipos de los tokens terminales generados desde Flex.
@@ -36,135 +60,229 @@
 %token <token> SUB
 %token <token> MUL
 %token <token> DIV
-
-%token <token> AS
-
-
-/* IDS y tipos de los tokens terminales generados desde Flex */
 %token <token> INSERT_INTO
+%token <string> TC_NAME
+%token <token> DOT
 %token <token> CREATE
+%token <token> AS
+%token <token> USING_KEY
+%token <token> UNIQUE
+%token <token> QUERY
+%token <token> ALL
+%token <token> DISTINCT 
 %token <token> DELETE
 %token <token> FROM
-%token <token> IN
 %token <token> WHERE
-%token LCURLY RCURLY LBRAC RBRAC COMMA COLON //CLOSE_PARENTHESIS OPEN_PARENTHESIS
-%token VTRUE VFALSE VNULL
-%token <string> STRING;
-%token <decimal> DECIMAL;
-%token <token> EQUAL;
+%token <token> EQUAL
+%token <token> AND
+%token <token> EQ
+%token <token> GT
+%token <token> LT
+%token <token> LTEQ
+%token <token> NEQ
+%token <token> GTEQ
+%token <token> OR
+%token <token> CHECK
+%token <token> IN
+%token <token> NULLABLE
+%token <token> ON_DELETE
+%token <token> ON_UPDATE
+%token <token> CASCADE
+%token <token> RESTRICT
+%token <token> SET_NULL
+%token <token> AS_ENUM
+%token <token> WITH
+
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
-%token <token> OPEN_LLAVE
-%token <token> CLOSE_LLAVE
-%token <integer> INTEGER
-%token <char> CHARS
 
-/* Tipos de dato para los no-terminales generados desde Bison */
+%token <token> OPEN_CURLY
+%token <token> CLOSE_CURLY
+%token <token> OPEN_BRACKETS
+%token <token> CLOSE_BRACKETS
+%token <token> COMMA
+%token <token> SEMICOLON
+%token <token> COLON
+%token <token> VTRUE 
+%token <token> VFALSE
+%token <token> VNULL
+
+%token <string> STRING;
+%token <decimal> DECIMAL;
+
+%token <integer> INTEGER;
+%token <char> CHARS;
+
+// Tipos de dato para los no-terminales generados desde Bison.
 %type <program> program
-%type <expression> expression
+%type <request> request
+%type <comparison> comparison
+%type <condition> condition
 %type <factor> factor
-%type <constant> constant
+%type <statement> statement
+%type <objects> objects
+%type <pairs> pairs
+%type <statements> statements
+%type <enumTypes> enum_types
+%type <columns> columns
+%type <checkBody> check_body
+%type <expression> expression
+%type <term> term
+%type <object> object
+%type <column> column
+%type <options> options
+%type <singleType> single_type
+%type <pair> pair
+%type <createTable> create_table
+%type <insertBody> insert_body
+%type <createBody> create_body
+%type <deleteBody> delete_body
+%type <check> check
+%type <queryBody> query_body
+%type <general> general
+%type <generals> generals
 
-%type <delete_statement> delete_statement
-
-
-// Reglas de asociatividad y precedencia (de menor a mayor).
-%left ADD SUB
-%left MUL DIV
 
 // El símbolo inicial de la gramatica.
 %start program
 
 %%
+program: generals														{ $$ = ProgramGrammarAction($1);}
+	;
 
+generals: general														{ $$ = GeneralGrammarAction($1); }
+	| general generals													{ $$ = GeneralMultipleGrammarAction($1,$2);}
+	;
 
-/* Delete statement */
+general: insert_body													{ $$ = GeneralInsertBodyGrammarAction($1); }
+	| create_body													{ $$ = GeneralCreateBodyGrammarAction($1); }
+	| delete_body													{ $$ = GeneralDeleteBodyGrammarAction($1); }
+	| check														{ $$ = GeneralCheckGrammarAction($1); }
+	| query_body													{ $$ = GeneralQueryBodyGrammarAction($1); }
+	;
 
-delete_statement: DELETE FROM STRING WHERE STRING EQUAL STRING
-	| DELETE FROM STRING WHERE STRING EQUAL DECIMAL
-	| DELETE IN STRING LCURLY pairs RCURLY
-	| DELETE FROM
+insert_body: INSERT_INTO TC_NAME OPEN_CURLY objects CLOSE_CURLY								{ $$ = InsertObjectsGrammarAction($2, $4); }
+	;
 
+objects: object														{ $$ = ObjectsGrammarAction($1); }
+	|	objects COMMA object											{ $$ = ObjectsMultipleGrammarAction($1, $3); }
+	;
 
-program: expression													{ $$ = ProgramGrammarAction($1); }
+object:	OPEN_CURLY pairs CLOSE_CURLY											{ $$ = ObjectGrammarAction($2); }
+	;
+
+pairs: pair														{ $$ = PairsGrammarAction($1); }
+	|	pairs COMMA pair											{ $$ = PairsCommaGrammarAction($1, $3); }
+	;
+
+pair: STRING COLON STRING												{ $$ = PairStringStringGrammarAction($1, $3); }
+	|	STRING COLON INTEGER											{ $$ = PairStringIntegerGrammarAction($1, $3); }
+	|	STRING COLON DECIMAL											{ $$ = PairStringDecimalGrammarAction($1, $3); }
+	|	STRING COLON VTRUE											{ $$ = PairStringTrueGrammarAction($1); }
+	|	STRING COLON VFALSE											{ $$ = PairStringFalseGrammarAction($1); }
+	|	STRING COLON VNULL											{ $$ = PairStringNullGrammarAction($1); }
 	;
 
 
-create_body: CREATE STRING LCURLY statements RCURLY
+create_body: CREATE create_table OPEN_CURLY statements CLOSE_CURLY							{ $$ = CreateBodyGrammarAction($2, $4); }
+	;
 
-statements: statements COMMA statement
-	| statement
+create_table: TC_NAME													{ $$ = CreateTableNameGrammarAction($1); }
+	|	TC_NAME USING_KEY TC_NAME										{ $$ = CreateTableUsingNameGrammarAction($1, $3); }
+	;
+
+statements: statements COMMA statement											{ $$ = StatementsMultipleGrammarAction($1, $3); }
+	|	statement												{ $$ = StatementsSimpleGrammarAction($1); }
+	;
 	
-statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS type
-	| 	STRING AS type
-
-columns: columns COMMA column
-	|	column
-
-column: STRING
-
-type: STRING
-
-
-insert_body: INSERT_INTO STRING LCURLY objects RCURLY
-
-objects: objects COMMA object
-	|	object
-
-object:	LCURLY pairs RCURLY
-
-pairs: pairs COMMA pair
-	|	pair
-
-pair: STRING COLON STRING
-
-
-expression: expression[left] ADD expression[right]					{ $$ = AdditionExpressionGrammarAction($left, $right); }
-	| expression[left] SUB expression[right]						{ $$ = SubtractionExpressionGrammarAction($left, $right); }
-	| expression[left] MUL expression[right]						{ $$ = MultiplicationExpressionGrammarAction($left, $right); }
-	| expression[left] DIV expression[right]						{ $$ = DivisionExpressionGrammarAction($left, $right); }
-	| factor														{ $$ = FactorExpressionGrammarAction($1); }
-	| INSERT_INTO
-	| json
+statement: OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME							{ $$ = StatementColumnsGrammarAction($2, $5); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS TC_NAME NULLABLE						{ $$ = StatementColumnsNullableGrammarAction($2, $5); }
+	| 	TC_NAME AS single_type											{ $$ = StatementSimpleGrammarAction($1, $3); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS				{ $$ = StatementFromGrammarAction($1, $3, $5, $7); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_DELETE options	{ $$ = StatementOnDeleteGrammarAction($1, $3, $5, $7, $10); }
+	| 	TC_NAME AS single_type FROM TC_NAME OPEN_PARENTHESIS TC_NAME CLOSE_PARENTHESIS ON_UPDATE options	{ $$ = StatementOnUpdateGrammarAction($1, $3, $5, $7, $10); }
+	|	OPEN_PARENTHESIS columns CLOSE_PARENTHESIS AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS	{ $$ = StatementColumnsAsEnumGrammarAction($2, $6); }
+	|	TC_NAME AS_ENUM OPEN_PARENTHESIS enum_types CLOSE_PARENTHESIS						{ $$ = StatementAsEnumGrammarAction($1, $4); }
 	;
 
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorGrammarAction($2); }
-	| constant														{ $$ = ConstantFactorGrammarAction($1); }
+options: CASCADE													{ $$ = OptionsCascadeGrammarAction(); }
+	|	SET_NULL												{ $$ = OptionsSetNullGrammarAction(); }
+	|	RESTRICT												{ $$ = OptionsRestrictGrammarAction(); }
+
+single_type: TC_NAME													{ $$ = SingleTypeGrammarAction($1); }
+	|	TC_NAME NULLABLE											{ $$ = SingleTypeNullableGrammarAction($1); }
+	|	TC_NAME WITH TC_NAME											{ $$ = SingleTypeWithGrammarAction($1,$3); }
 	;
 
-constant: INTEGER													{ $$ = IntegerConstantGrammarAction($1); }
+
+enum_types: enum_types COMMA STRING											{ $$ = EnumTypesMultipleGrammarAction($1, $3); }
+	|	STRING													{ $$ = EnumTypesSingleGrammarAction($1); }
 	;
 
-json:
-    | value
+
+columns: columns COMMA column												{ $$ = ColumnsMultipleGrammarAction($1,$3); }
+	| column													{ $$ = ColumnsSingleGrammarAction($1); }
+	;
+
+column: TC_NAME														{ $$ = ColumnGrammarAction($1); }
+	| UNIQUE TC_NAME												{ $$ = ColumnUniqueGrammarAction($2); }
+	;
+
+
+
+delete_body: DELETE FROM TC_NAME WHERE TC_NAME EQUAL STRING								{ $$ = DeleteFromWhereGrammarAction($3,$5,$7); }
+	| DELETE FROM TC_NAME object											{ $$ = DeleteFromGrammarAction($3,$4); }
+	;
+
+
+query_body: QUERY TC_NAME OPEN_PARENTHESIS request COMMA TC_NAME COMMA check_body CLOSE_PARENTHESIS			{ $$ = QueryBodyGrammarAction($2,$4,$6,$8); }
+	;
+
+request: TC_NAME													{ $$ = RequestTc_nameGrammarAction($1); }
+	|	OPEN_BRACKETS columns CLOSE_BRACKETS									{ $$ = RequestColumnsGrammarAction($2); }
+	|	DISTINCT OPEN_BRACKETS columns CLOSE_BRACKETS								{ $$ = RequestDistinctColumnsGrammarAction($3); }
+	|	ALL													{ $$ = RequestAllGrammarAction(); }
+	;
+
+
+check:
+    CHECK TC_NAME OPEN_CURLY check_body CLOSE_CURLY									{ $$ = CheckGrammarAction($2, $4); }
     ;
 
-value: object
-     | STRING
-     | DECIMAL
-     | array
-     | VTRUE
-     | VFALSE
-     | VNULL
-     ;
+check_body:
+    condition														{ $$ = CheckConditionGrammarAction($1); }
+    | condition AND check_body												{ $$ = CheckAndGrammarAction($3, $1); }
+    | condition OR check_body												{ $$ = CheckOrGrammarAction($3, $1); }
+    ;
 
-object: LCURLY RCURLY
-      | LCURLY members RCURLY
-      ;
+condition:
+    expression comparison expression											{ $$ = ConditionGrammarAction($1, $2, $3); }
+    ;
 
-members: member
-       | members COMMA member
-       ;
+expression:
+    term														{ $$ = ExpressionTermGrammarAction($1); }
+    | expression ADD term												{ $$ = ExpressionAddGrammarAction($1,$3); }
+    | expression SUB term												{ $$ = ExpressionSubGrammarAction($1,$3); }
+    ;
 
-member: STRING COLON value
-      ;
+term:
+    factor														{ $$ = TermFactorGrammarAction($1); }
+    | term ALL factor													{ $$ = TermAllGrammarAction($1,$3); }
+    | term DIV factor													{ $$ = TermDivGrammarAction($1,$3); }
+    ;
 
-array: LBRAC RBRAC
-     | LBRAC values RBRAC
-     ;
+factor:
+    TC_NAME														{ $$ = Tc_nameFactorGrammarAction($1); }
+    | INTEGER														{ $$ = IntegerFactorGrammarAction($1); }
+    | STRING														{ $$ = StringFactorGrammarAction($1); }
+    ;
 
-values: value
-      | values COMMA value
-      ;
-
+comparison: GT 													{ $$ = GreaterConstantGrammarAction(); }
+	| LT 														{ $$ = LesserConstantGrammarAction(); }
+	| EQ 														{ $$ = EqualConstantGrammarAction(); }
+	| GTEQ 														{ $$ = GreaterOrEqualConstantGrammarAction(); }
+	| LTEQ 														{ $$ = LesserOrEqualConstantGrammarAction(); }
+	| NEQ														{ $$ = NotEqualConstantGrammarAction(); }
+	;
 %%
+

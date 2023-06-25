@@ -1,0 +1,1 @@
+QUERY queryName (*, nombreTabla, var == 100) 
