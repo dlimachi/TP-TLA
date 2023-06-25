@@ -127,7 +127,7 @@ static void generateComparisson( Comparison * comparison ){
         strcat(check_code, " < ");
         break;
     case (CEQ):
-        strcat(check_code, " == ");
+        strcat(check_code, " = ");
         break;
     case (CGTEQ):
         strcat(check_code, " >= ");
@@ -213,6 +213,7 @@ static void generateCondition( Condition * condition ){
 }
 
 static void generateCheckBody( CheckBody * checkBody ){
+    LogInfo("checkingBodies");
     check_progress = strlen(check_code);
     if ( check_progress % CD_LEN < CD_LEN/9 )
         check_code = realloc(check_code, CD_LEN * ++check_size);
@@ -247,7 +248,7 @@ char * generateCheck( Check * check ){
     check_code = calloc(1,CD_LEN);
     check_size = 1;
     check_code[0] = 0;
-    check_code[CD_LEN]=0;
+    check_code[CD_LEN-1]=0;
     int check_progress = 0;
 
     char checkName[TC_LEN];
@@ -257,7 +258,7 @@ char * generateCheck( Check * check ){
     strcat(check_code, check->tc_name);
 
 
-    strcat(check_code, "( ");
+    strcat(check_code, " ( ");
     
     generateCheckBody( check->checkBody );
     strcat(check_code, " );");

@@ -13,8 +13,8 @@ static void generateWhereDelete(char * column, char * condition){
 
     strcpy(delete_code,"DELETE FROM ");
     strcat(delete_code,delete_tc_name);
-    strcat(delete_code," WHERE ");
-    int delete_progress = 13 + 7 + strlen(delete_tc_name);
+    strcat(delete_code," WHERE (");
+    int delete_progress = 13 + 8 + strlen(delete_tc_name);
 
     char * aux = remover_comillas_extremos(column);
     delete_progress += strlen(aux);
@@ -26,6 +26,7 @@ static void generateWhereDelete(char * column, char * condition){
     delete_progress += strlen(aux2);
 
     strcat(delete_code, aux2);
+    strcat(delete_code," )");
 }
 
 static void generatePair( Pair * pair ){
@@ -81,9 +82,10 @@ static void generatePairs( Pairs * pairs ){
 static void generateObjectDelete( Object * object ){
     strcpy(delete_code,"DELETE FROM ");
     strcat(delete_code,delete_tc_name);
-    strcat(delete_code," WHERE ");
+    strcat(delete_code," WHERE (");
     int delete_progress = 13 + 7 + strlen(delete_tc_name);
     generatePairs(object->pairs);
+    strcat(delete_code, " )");
 
 }
 
