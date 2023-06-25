@@ -2,7 +2,7 @@
 #include "generator.h"
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include "generators.h"
-#include "bison-actions.h"
+#include "../../frontend/syntactic-analysis/bison-actions.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
