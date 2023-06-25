@@ -1,31 +1,28 @@
-#include <stdio.h>
+#include <stdio.h>ogress
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include "listUtils.h"
+#include "generators.h"
 
-#define CD_LEN 1024
-#define TC_LEN 128
+char * query_code;
+int query_size;
+static char query_tc_name[TC_LEN];
+static int query_progress;
 
-char tc_name[TC_LEN];
-char * code;
-int size;
-int progress;
-
-
-void generateColumn( Column * column ){
+static void generateColumn( Column * column ){
     if ( column->is_unique )
-        strcat(code, "UNIQUE ");
-    strcat(code, column->tc_name);
+        strcat(query_code, "UNIQUE ");
+    strcat(query_code, column->tc_name);
 
 }
 
-void generateColumns( Columns * columns ){
+static void generateColumns( Columns * columns ){
     switch (columns->type)
     {
     case MULTIPLE:
-        strcat(code, "( ");
+        strcat(query_code, "( ");
         generateColumn(columns->column);
         columns = columns->columns;
-        strcat(code, ",");
+        strcat(query_code, ",");
         while( columns != NULL ){
             generateColumn(columns->column);
             columns = columns->columns;
@@ -39,30 +36,30 @@ void generateColumns( Columns * columns ){
     }
 }
 
-void generateRequest( Request * request ){
+static void generateRequest( Request * request ){
     switch (request->type)
     {
     case RTC_NAME:
         generateColumns(request->columns);
-        strcat(code, " FROM ");
-        strcat(code, request->tc_name);
+        strcat(query_code, " FROM ");
+        strcat(query_code, request->tc_name);
         break;
     case COLUMNS:
         generateColumns(request->columns);
-        strcat(code, " FROM ");
-        strcat(code, request->tc_name);
+        strcat(query_code, " FROM ");
+        strcat(query_code, request->tc_name);
         break;
     case DISTINCT_COLUMNS:
-        strcat(code, " * FROM ");
-        strcat(code, request->tc_name);
-        strcat(code, " EXCEPT SELECT ");
+        strcat(query_code, " * FROM ");
+        strcat(query_code, request->tc_name);
+        strcat(query_code, " EXCEPT SELECT ");
         generateColumns(request->columns);
-        strcat(code, " FROM ");
-        strcat(code, request->tc_name);
+        strcat(query_code, " FROM ");
+        strcat(query_code, request->tc_name);
         break;
     case RALL:
-        strcat(code, "* FROM ");
-        strcat(code, request->tc_name);
+        strcat(query_code, "* FROM ");
+        strcat(query_code, request->tc_name);
         break;    
     default:
         break;
@@ -70,20 +67,20 @@ void generateRequest( Request * request ){
 }
 
 char * generateQuery( QueryBody * queryBody ){
-    code = malloc(CD_LEN);
-    size = 1;
-    code[0] = 0;
-    int progress = 0;
+    query_code = malloc(CD_LEN);
+    query_size = 1;
+    query_code[0] = 0;
+    int query_progress = 0;
 
-    strcat(code, "SELECT ");
+    strcat(query_code, "SELECT ");
 
     generateRequest(queryBody->request);
 
     if ( queryBody->condition != NULL )
     {
-        strcat(code, " WHERE ");
-        strcat(code, queryBody->condition);
+        strcat(query_code, " WHERE ");
+        strcat(query_code, queryBody->condition);
     }
 
-    return code;
+    return query_code;
 }

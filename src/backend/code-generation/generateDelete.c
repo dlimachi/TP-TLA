@@ -2,67 +2,62 @@
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include "strings.h"
 #include <stdio.h>
+#include "generators.h"
 
+char * delete_code;
+int delete_size;
+static char delete_tc_name[TC_LEN];
+static int delete_progress;
 
-#define CD_LEN 1024
-#define TC_LEN 128
+static void generateWhereDelete(char * column, char * condition){
 
-char tc_name[TC_LEN];
-char * code;
-int size;
-int progress;
-
-
-
-void generateWhereDelete(char * column, char * condition){
-
-    strcpy(code,"DELETE FROM ");
-    strcat(code,tc_name);
-    strcat(code," WHERE ");
-    int progress = 13 + 7 + strlen(tc_name);
+    strcpy(delete_code,"DELETE FROM ");
+    strcat(delete_code,delete_tc_name);
+    strcat(delete_code," WHERE ");
+    int delete_progress = 13 + 7 + strlen(delete_tc_name);
 
     char * aux = remover_comillas_extremos(column);
-    progress += strlen(aux);
+    delete_progress += strlen(aux);
 
-    strcat(code, aux);
-    strcat(code, " = ");
+    strcat(delete_code, aux);
+    strcat(delete_code, " = ");
 
-    char * aux2 = replaceQuotes(condition);
-    progress += strlen(aux2);
+    char * aux2 = modificar_comillas(condition);
+    delete_progress += strlen(aux2);
 
-    strcat(code, aux2);
-    strcat(code, ";");
+    strcat(delete_code, aux2);
+    strcat(delete_code, ";");
 }
 
-void generatePair( Pair * pair ){
+static void generatePair( Pair * pair ){
     if(pair->column_name==NULL){
         return;
     }
     char * aux = remover_comillas_extremos(pair->column_name);
-    progress += strlen(aux);
+    delete_progress += strlen(aux);
 
-    strcat(code, aux);
-    strcat(code, " = ");
+    strcat(delete_code, aux);
+    strcat(delete_code, " = ");
 
     switch (pair->type)
     {
     case PSTRING:
-        strcat(code, replaceQuotes(pair->column_value_string));
+        strcat(delete_code, modificar_comillas(pair->column_value_string));
         break;
     case PINTEGER:
-        strcat(code, remover_comillas_extremos(pair->column_value_string));
+        strcat(delete_code, remover_comillas_extremos(pair->column_value_string));
         break;
     case PDECIMAL:
-        strcat(code, remover_comillas_extremos(pair->column_value_string));
+        strcat(delete_code, remover_comillas_extremos(pair->column_value_string));
         break;
     case PVTRUE:
-        strcat(code, "true");
+        strcat(delete_code, "true");
         break;
     case PVFALSE:
-        strcat(code, "false");
+        strcat(delete_code, "false");
         break;
     case PVNULL:
-        strcat(code, "NULL");
+        strcat(delete_code, "NULL");
         break;
     
     default:
@@ -71,32 +66,32 @@ void generatePair( Pair * pair ){
 
 }
 
-void generatePairs( Pairs * pairs ){
+static void generatePairs( Pairs * pairs ){
     if ( pairs == NULL )
         return;
         
     generatePair( pairs->pair );
     if ( pairs->pairs != NULL )
     {
-        strcat(code, " AND ");
+        strcat(delete_code, " AND ");
         generatePairs(pairs->pairs);
     }
     
 }
 
-void generateObjectDelete( Object * object ){
-    strcpy(code,"DELETE FROM ");
-    strcat(code,tc_name);
-    strcat(code," WHERE ");
-    int progress = 13 + 7 + strlen(tc_name);
+static void generateObjectDelete( Object * object ){
+    strcpy(delete_code,"DELETE FROM ");
+    strcat(delete_code,delete_tc_name);
+    strcat(delete_code," WHERE ");
+    int delete_progress = 13 + 7 + strlen(delete_tc_name);
     generatePairs(object->pairs);
 
 }
 
 char * generateDelete( DeleteBody * deleteBody ){
-    code = malloc(CD_LEN);
-    size = 1;
-    strcpy(tc_name, deleteBody->tc_name);
+    delete_code = malloc(CD_LEN);
+    delete_size = 1;
+    strcpy(delete_tc_name, deleteBody->tc_name);
     switch (deleteBody->type)
     {
     case DWHERE:
@@ -110,5 +105,5 @@ char * generateDelete( DeleteBody * deleteBody ){
     default:
         break;
     }
-    return code;
+    return delete_code;
 }

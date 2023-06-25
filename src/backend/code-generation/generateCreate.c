@@ -4,17 +4,17 @@
 #include "listUtils.h"
 #include "generators.h"
 #include <ctype.h>
+#include "generators.h"
 
-#define CD_LEN 1024
-#define TC_LEN 128
 
-char tc_name[TC_LEN];
+
 char key[TC_LEN];
 char currentEnum[TC_LEN];
 char enums[CD_LEN];
-char * code;
-int size;
-int progress;
+char * create_code;
+int create_size;
+static char create_tc_name[TC_LEN];
+static int create_progress;
 
 
 void stringToUpper(char* str) {
@@ -50,28 +50,28 @@ void generateEnums(char * columnName, EnumTypes * enumTypes){
 }
 
 void generateForm(char* columnName, SingleType * singleType, char* tcNameFrom, char * columnNameFrom, char * action, Options * options){
-    strcat(code,columnName);
-    strcat(code," ");
+    strcat(create_code,columnName);
+    strcat(create_code," ");
     stringToUpper(singleType->tc_name);
-    strcat(code,singleType->tc_name);
-    strcat(code, " REFERENCES ");
-    strcat(code,tcNameFrom);
-    strcat(code, "(");
-    strcat(code, columnNameFrom);
-    strcat(code, ")");
+    strcat(create_code,singleType->tc_name);
+    strcat(create_code, " REFERENCES ");
+    strcat(create_code,tcNameFrom);
+    strcat(create_code, "(");
+    strcat(create_code, columnNameFrom);
+    strcat(create_code, ")");
     if(action != NULL){
-        strcat(code, " ");
-        strcat(code, action);
+        strcat(create_code, " ");
+        strcat(create_code, action);
         switch(options->type)
         {
             case(OCASCADE):
-                strcat(code, " CASCADE");
+                strcat(create_code, " CASCADE");
                 break;
             case(OSET_NULL):
-                strcat(code," SET NULL");
+                strcat(create_code," SET NULL");
                 break;
             case(ORESTRICT):
-                strcat(code, " RESTRICT");
+                strcat(create_code, " RESTRICT");
                 break;
             default:
                 break;
@@ -80,47 +80,47 @@ void generateForm(char* columnName, SingleType * singleType, char* tcNameFrom, c
 }
 
 void generateSingleType(char * columnName, SingleType * singleType ){
-    strcat(code,columnName);
-    strcat(code, " ");
+    strcat(create_code,columnName);
+    strcat(create_code, " ");
     stringToUpper(singleType->tc_name);
-    strcat(code,singleType->tc_name);
+    strcat(create_code,singleType->tc_name);
     if(key != NULL && strcmp(columnName, key)){
-        strcat(code, " PRIMARY KEY ");
+        strcat(create_code, " PRIMARY KEY ");
         return;
     }
 }
 
 void generateWithVarType(char * columnName,  char * varType ){
-    strcat(code,columnName);
-    strcat(code, " ");
+    strcat(create_code,columnName);
+    strcat(create_code, " ");
     stringToUpper(varType);
     //stringToUpper(singleType->tc_name)
-    strcat(code,varType);
+    strcat(create_code,varType);
     if(key != NULL && strcmp(columnName, key)){
-        strcat(code, " PRIMARY KEY");
+        strcat(create_code, " PRIMARY KEY");
         return;
     }
 }
 
-void generateColumn(Column * column, char * varType ){
-    LogDebug("puta madre %s", code);
-    strcat(code,column->tc_name);
-    strcat(code, " ");
+static void generateColumn(Column * column, char * varType ){
+    LogDebug("puta madre %s", create_code);
+    strcat(create_code,column->tc_name);
+    strcat(create_code, " ");
     stringToUpper(varType);
-    strcat(code,varType);
+    strcat(create_code,varType);
     if(key != NULL && !strcmp(column->tc_name, key)){
-        strcat(code, " PRIMARY KEY");
+        strcat(create_code, " PRIMARY KEY");
         return;
     }
     if(column->is_unique){
-        strcat(code, " UNIQUE");
+        strcat(create_code, " UNIQUE");
     }
 }
-void generateColumns( Columns * columns, char * varType ){
+static void generateColumns( Columns * columns, char * varType ){
     if ( columns->columns != NULL )
     {
         generateColumns(columns->columns, varType);
-        strcat(code, ",\n\t");
+        strcat(create_code, ",\n\t");
     }
    if ( columns == NULL )
         return;
@@ -128,7 +128,7 @@ void generateColumns( Columns * columns, char * varType ){
     generateColumn( columns->column, varType );
 
 }
-void generateStatement( Statement * statement ){
+static void generateStatement( Statement * statement ){
     switch (statement->type)
     {
     case NORMAL:
@@ -171,11 +171,11 @@ void generateStatement( Statement * statement ){
 
 }
 
-void generateStatements( Statements * statements ){
+static void generateStatements( Statements * statements ){
     if ( statements->statements != NULL )
     {
         generateStatements(statements->statements);
-        strcat(code, ",\n\t");
+        strcat(create_code, ",\n\t");
     }
     if ( statements == NULL )
         return;
@@ -186,16 +186,16 @@ void generateStatements( Statements * statements ){
 }
 
 char * generateCreate( CreateBody * createBody ){
-    code = malloc(CD_LEN);
-    size = 1;
-    strcat(code,"CREATE TABLE ");
-    strcpy(tc_name, createBody->createTable->tc_name);
-    strcat(code, tc_name);
+    create_code = malloc(CD_LEN);
+    create_size = 1;
+    strcat(create_code,"CREATE TABLE ");
+    strcpy(create_tc_name, createBody->createTable->tc_name);
+    strcat(create_code, create_tc_name);
     if(createBody->createTable->using_key){
         strcpy(key, createBody->createTable->key_name);
     }
-    strcat(code," ( \n\t");
+    strcat(create_code," ( \n\t");
     generateStatements(createBody->statements);
-    strcat(code, "\n);");
-    return code;
+    strcat(create_code, "\n);");
+    return create_code;
 }

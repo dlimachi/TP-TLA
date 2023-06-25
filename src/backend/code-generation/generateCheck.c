@@ -2,14 +2,17 @@
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include <string.h>
 #include "listUtils.h"
+#include "../support/logger.h"
 
-#define CD_LEN 1024
-#define TC_LEN 128
+#include "generators.h"
 
-char * code;
-int size;
-static char tc_name[TC_LEN];
-static int progress;
+
+
+char * check_code;
+int check_size;
+static char check_tc_name[TC_LEN];
+static int check_progress;
+
 // stringList code = createList();
 /*
 
@@ -114,26 +117,26 @@ stringList generateCheck(Check * check) {
 }
 */
 
-void generateComparisson( Comparison * comparison ){
+static void generateComparisson( Comparison * comparison ){
     switch (comparison->type)
     {
     case CGT:
-        strcat(code, " > ");
+        strcat(check_code, " > ");
         break;
     case CLT:
-        strcat(code, " < ");
+        strcat(check_code, " < ");
         break;
     case CEQ:
-        strcat(code, " == ");
+        strcat(check_code, " == ");
         break;
     case CGTEQ:
-        strcat(code, " >= ");
+        strcat(check_code, " >= ");
         break;
     case CLTEQ:
-        strcat(code, " <= ");
+        strcat(check_code, " <= ");
         break;
     case CNEQ:
-        strcat(code, " <> ");
+        strcat(check_code, " <> ");
         break;
     
     default:
@@ -141,34 +144,34 @@ void generateComparisson( Comparison * comparison ){
     }
 }
 
-void generateFactor( Factor * factor ){
+static void generateFactor( Factor * factor ){
     switch (factor->type)
     {
     case FTC_NAME:
-        strcat(code, remover_comillas_extremos(factor->data));
+        strcat(check_code, remover_comillas_extremos(factor->data));
         break;
     case INT:
-        strcat(code, remover_comillas_extremos(factor->data));
+        strcat(check_code, remover_comillas_extremos(factor->data));
         break;
     case FSTRING:
-        strcat(code, modificar_comillas(factor->data));
+        strcat(check_code, modificar_comillas(factor->data));
         break;
     default:
         break;
     }
 }
 
-void generateTerm( Term * term ){
+static void generateTerm( Term * term ){
     switch (term->type)
     {
     case TALL:
         generateFactor(term->factor);
-        strcat(code, " * ");
+        strcat(check_code, " * ");
         generateTerm(term->term);
         break;
     case TDIV:
         generateFactor(term->factor);
-        strcat(code, " / ");
+        strcat(check_code, " / ");
         generateTerm(term->term);
         break;
     case TERM:
@@ -180,7 +183,7 @@ void generateTerm( Term * term ){
     }
 }
 
-void generateExpression( Expression * expression ){
+static void generateExpression( Expression * expression ){
     switch (expression->type)
     {
     case TERM:
@@ -188,12 +191,12 @@ void generateExpression( Expression * expression ){
         break;
     case EADD:
         generateTerm(expression->term);
-        strcat(code, " + ");
+        strcat(check_code, " + ");
         generateExpression(expression->expression);
         break;
     case ESUB:
         generateTerm(expression->term);
-        strcat(code, " - ");
+        strcat(check_code, " - ");
         generateExpression(expression->expression);
         break;
     
@@ -202,16 +205,16 @@ void generateExpression( Expression * expression ){
     }
 }
 
-void generateCondition( Condition * condition ){
+static void generateCondition( Condition * condition ){
     generateExpression(condition->leftExpression);
     generateComparisson(condition->comparison);
     generateExpression(condition->rightExpression);
 }
 
-void generateCheckBody( CheckBody * checkBody ){
-    progress = strlen(code);
-    if ( progress % CD_LEN < CD_LEN/9 )
-        code = realloc(code, CD_LEN * ++size);
+static void generateCheckBody( CheckBody * checkBody ){
+    check_progress = strlen(check_code);
+    if ( check_progress % CD_LEN < CD_LEN/9 )
+        check_code = realloc(check_code, CD_LEN * ++check_size);
     
     switch (checkBody->type)
     {
@@ -220,12 +223,12 @@ void generateCheckBody( CheckBody * checkBody ){
         break;
     case CAND:
         generateCondition(checkBody->condition);
-        strcat(code, " AND ");
+        strcat(check_code, " AND ");
         generateCheckBody(checkBody->checkBody);
         break;
     case COR:
         generateCondition(checkBody->condition);
-        strcat(code, " OR ");
+        strcat(check_code, " OR ");
         generateCheckBody(checkBody->checkBody);
         break;
     
@@ -238,22 +241,23 @@ void generateCheckBody( CheckBody * checkBody ){
 
 
 char * generateCheck( Check * check ){
-    code = malloc(CD_LEN);
-    size = 1;
-    code[0] = 0;
-    code[CD_LEN]=0;
-    int progress = 0;
+    LogInfo("Hola1");
+    check_code = malloc(CD_LEN);
+    check_size = 1;
+    check_code[0] = 0;
+    check_code[CD_LEN]=0;
+    int check_progress = 0;
 
     char checkName[TC_LEN];
     strcpy(checkName,check->tc_name);
 
-    strcat(code, "CONSTRAINT ");
-    strcat(code, check->tc_name);
+    strcat(check_code, "CONSTRAINT ");
+    strcat(check_code, check->tc_name);
 
 
-    strcat(code, "( ");
+    strcat(check_code, "( ");
     generateCheckBody( check->checkBody );
-    strcat(code, " )");
+    strcat(check_code, " )");
 
-    return code;
+    return check_code;
 }

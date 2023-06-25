@@ -4,19 +4,16 @@
 #include "listUtils.h"
 #include "generators.h"
 
-#define CD_LEN 1024
-#define TC_LEN 128
-
-char tc_name[TC_LEN];
-char * code;
-int size;
-int progress;
-
 stringList colsList = NULL;
 stringList valuesList = NULL;
 stringList typesList = NULL;
 
-void generatePair( Pair * pair ){
+char * insert_code;
+int insert_size;
+static char insert_tc_name[TC_LEN];
+static int insert_progress;
+
+static void generatePair( Pair * pair ){
     if(pair==NULL){
         return;
     }
@@ -34,14 +31,14 @@ void generatePair( Pair * pair ){
             break;
         default:
             
-            addToList(valuesList,replaceQuotes(pair->column_value_string));
+            addToList(valuesList,modificar_comillas(pair->column_value_string));
             break;
     }
     addToList(typesList, "pair->type");
 
 }
 
-void generatePairs( Pairs * pairs ){
+static void generatePairs( Pairs * pairs ){
     if ( pairs == NULL )
         return;
 
@@ -51,7 +48,7 @@ void generatePairs( Pairs * pairs ){
 
 }
 
-void generateObjects( Objects * objects ){
+static void generateObjects( Objects * objects ){
     if (objects == NULL){
         return;
     }
@@ -60,32 +57,32 @@ void generateObjects( Objects * objects ){
     valuesList = createList();
     typesList = createList();
 
-    // strcat el codigo a generar sobre code
-    strcat(code,"INSERT INTO ");
-    strcat(code, tc_name);
+    // strcat el codigo a generar sobre insert_code
+    strcat(insert_code,"INSERT INTO ");
+    strcat(insert_code, insert_tc_name);
 
-    progress = strlen(code);
-    if ( progress % CD_LEN < CD_LEN/9 )
-        code = realloc(code, CD_LEN * ++size);
+    insert_progress = strlen(insert_code);
+    if ( insert_progress % CD_LEN < CD_LEN/9 )
+        insert_code = realloc(insert_code, CD_LEN * ++insert_size);
     generatePairs(objects->object->pairs);
-    strcat(code,"(");
+    strcat(insert_code,"(");
     
-    strcat(code, colsList->string);
+    strcat(insert_code, colsList->string);
     colsList = colsList->next;
 
-    progress = strlen(code);
-    if ( progress % CD_LEN < CD_LEN/9 )
-        code = realloc(code, CD_LEN * ++size);
+    insert_progress = strlen(insert_code);
+    if ( insert_progress % CD_LEN < CD_LEN/9 )
+        insert_code = realloc(insert_code, CD_LEN * ++insert_size);
     int i = 0;
     while ( colsList != NULL ){
         if(i>0){
-            strcat(code,", ");
+            strcat(insert_code,", ");
         }
-        strcat(code,remover_comillas_extremos(colsList->string));
+        strcat(insert_code,remover_comillas_extremos(colsList->string));
 
-        progress = strlen(code);
-        if ( progress % CD_LEN < CD_LEN/9 )
-            code = realloc(code, CD_LEN * ++size);
+        insert_progress = strlen(insert_code);
+        if ( insert_progress % CD_LEN < CD_LEN/9 )
+            insert_code = realloc(insert_code, CD_LEN * ++insert_size);
 
         colsList = colsList->next;
         i++;
@@ -93,28 +90,28 @@ void generateObjects( Objects * objects ){
     }
     freeList(colsList);
 
-    strcat(code,") VALUES (");
+    strcat(insert_code,") VALUES (");
 
-    progress = strlen(code);
-    if ( progress % CD_LEN < CD_LEN/9 )
-        code = realloc(code, CD_LEN * ++size);
+    insert_progress = strlen(insert_code);
+    if ( insert_progress % CD_LEN < CD_LEN/9 )
+        insert_code = realloc(insert_code, CD_LEN * ++insert_size);
     
-    strcat(code, valuesList->string);
+    strcat(insert_code, valuesList->string);
     valuesList = valuesList->next;
 
-    progress = strlen(code);
-    if ( progress % CD_LEN < CD_LEN/9 )
-        code = realloc(code, CD_LEN * ++size);
+    insert_progress = strlen(insert_code);
+    if ( insert_progress % CD_LEN < CD_LEN/9 )
+        insert_code = realloc(insert_code, CD_LEN * ++insert_size);
     i=0;
     while ( valuesList != NULL ){
         if (i>0){
-            strcat(code,", ");
+            strcat(insert_code,", ");
         }
-        strcat(code,valuesList->string);
+        strcat(insert_code,valuesList->string);
 
-        progress = strlen(code);
-        if ( progress % CD_LEN < CD_LEN/9 )
-            code = realloc(code, CD_LEN * ++size);
+        insert_progress = strlen(insert_code);
+        if ( insert_progress % CD_LEN < CD_LEN/9 )
+            insert_code = realloc(insert_code, CD_LEN * ++insert_size);
 
         valuesList = valuesList->next;
         i++;
@@ -122,23 +119,23 @@ void generateObjects( Objects * objects ){
     }
     freeList(valuesList);
 
-    strcat(code, ");");
+    strcat(insert_code, ");");
 
-    strcat(code,"\n");
+    strcat(insert_code,"\n");
 
 }
 
 char * generateInsert(InsertBody * insertBody) {
-	code = malloc(CD_LEN);
-    size = 1;
-    code[0] = 0;
-    code[CD_LEN]=0;
-    int progress = 0;
+	insert_code = malloc(CD_LEN);
+    insert_size = 1;
+    insert_code[0] = 0;
+    insert_code[CD_LEN]=0;
+    int insert_progress = 0;
 
     // guardo el nombre de tabla
-    strcpy(tc_name,insertBody->tc_name);
+    strcpy(insert_tc_name,insertBody->tc_name);
     // creo un insert --> \n --> siguiente insert
     generateObjects(insertBody->objects);
-    return code;
+    return insert_code;
     
 }
