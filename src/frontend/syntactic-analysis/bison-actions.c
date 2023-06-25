@@ -937,3 +937,18 @@ void FreeGeneral(General* general) {
     free(general);
 }
 
+void FreeGenerals(Generals * generals){
+	if (generals == NULL )
+		return;
+	
+	FreeGenerals(generals->generals);
+
+	FreeGeneral(generals->general);
+	free(generals);
+}
+
+void FreeProgram(Program * program){
+	FreeGenerals(program->generals);
+	free(program);
+}
+

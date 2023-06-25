@@ -2,7 +2,7 @@
 #include "generator.h"
 #include "../semantic-analysis/abstract-syntax-tree.h"
 #include "generators.h"
-
+#include "bison-actions.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,6 +55,7 @@ void Generator(Program * program) {
 		strcat(codeFinal,codeAux);
 
 		// ACA!
+		free(codeAux);
 
 		if ( toProcess->type == MULTIPLE )
 			toProcess = toProcess->generals;
@@ -63,7 +64,7 @@ void Generator(Program * program) {
 		
 	}
 
-	printf(codeFinal);
+	FreeProgram(program);
 	LogInfo(codeFinal);
 
 	//generar archivo con code
@@ -75,6 +76,8 @@ void Generator(Program * program) {
 	fprintf( output, "%s", codeFinal);
 	
 	fclose(output);
+
+	free(codeFinal);
 
 
 }

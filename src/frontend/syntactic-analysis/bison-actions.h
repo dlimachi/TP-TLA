@@ -153,5 +153,7 @@ void FreeCheck(Check* check);
 void FreeRequest(Request* request);
 void FreeQueryBody(QueryBody* queryBody);
 void FreeGeneral(General* general);
+void FreeGenerals(Generals * generals);
+void FreeProgram(Program * program);
 
 #endif
