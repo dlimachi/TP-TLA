@@ -60,3 +60,40 @@ char* remover_comillas_extremos(char* input) {
         return strdup(input); // Si la cadena original no comienza y termina con comillas, la retornamos tal cual.
     }
 }
+
+char* modificar_comillas(char* input) {
+    int length = strlen(input);
+    if(length < 2) {
+        return NULL; // Si el string es demasiado corto, retornamos NULL.
+    }
+
+    char* new_str;
+
+    // Si la cadena comienza y termina con comillas dobles, las cambiamos por simples.
+    if(input[0] == '\"' && input[length-1] == '\"') {
+        new_str = malloc(length + 1); // Creamos una nueva cadena con espacio para la nueva cadena.
+        if(new_str == NULL) {
+            return NULL; // Si no se pudo asignar la memoria, retornamos NULL.
+        }
+        new_str[0] = new_str[length-1] = '\''; // Cambiamos las comillas dobles por simples en los extremos.
+        strncpy(new_str + 1, input + 1, length - 2); // Copiamos el resto de la cadena.
+        new_str[length] = '\0'; // Aseguramos que la cadena es nula terminada.
+    }
+    // Si la cadena no comienza y termina con comillas, añadimos comillas simples al principio y al final.
+    else if(input[0] != '\'' && input[length-1] != '\'' && input[0] != '\"' && input[length-1] != '\"') {
+        new_str = malloc(length + 3); // Creamos una nueva cadena con espacio para la nueva cadena y las comillas adicionales.
+        if(new_str == NULL) {
+            return NULL; // Si no se pudo asignar la memoria, retornamos NULL.
+        }
+        new_str[0] = new_str[length+1] = '\''; // Añadimos las comillas simples en los extremos.
+        strncpy(new_str + 1, input, length); // Copiamos el resto de la cadena.
+        new_str[length+2] = '\0'; // Aseguramos que la cadena es nula terminada.
+    }
+    // Si no se cumplen ninguna de las condiciones anteriores, retornamos la cadena original.
+    else {
+        return strdup(input);
+    }
+
+    return new_str;
+}
+

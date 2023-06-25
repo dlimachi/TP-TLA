@@ -14,3 +14,7 @@ stringList addToList( stringList list, char * string );
 
 void freeList( stringList list );
 
+char* remover_comillas_extremos(char* input);
+
+char* modificar_comillas(char* input);
+
