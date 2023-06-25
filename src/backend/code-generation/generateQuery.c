@@ -58,6 +58,102 @@ void generateRequest( Request * request ){
     }
 }
 
+
+static void generateComparisson( Comparison * comparison ){
+    switch (comparison->type)
+    {
+    case (CGT):
+        strcat(query_code, " > ");
+        break;
+    case (CLT):
+        strcat(query_code, " < ");
+        break;
+    case (CEQ):
+        strcat(query_code, " == ");
+        break;
+    case (CGTEQ):
+        strcat(query_code, " >= ");
+        break;
+    case (CLTEQ):
+        strcat(query_code, " <= ");
+        break;
+    case (CNEQ):
+        strcat(query_code, " <> ");
+        break;
+    
+    default:
+        break;
+    }
+}
+
+static void generateFactor( Factor * factor ){
+    switch (factor->type)
+    {
+    case FTC_NAME:
+        
+        strcat(query_code, remover_comillas_extremos(factor->data));
+        break;
+    case INT:
+        strcat(query_code, factor->data);
+        break;
+    case FSTRING:
+        strcat(query_code, modificar_comillas(factor->data));
+        break;
+    default:
+        break;
+    }
+}
+
+static void generateTerm( Term * term ){
+    switch (term->type)
+    {
+    case TALL:
+        generateTerm(term->term);
+        strcat(query_code, " * ");
+        generateFactor(term->factor);
+        break;
+    case TDIV:
+        generateFactor(term->factor);
+        strcat(query_code, " / ");
+        generateTerm(term->term);
+        break;
+    case FACTOR:
+        generateFactor(term->factor);
+        break;
+    
+    default:
+        break;
+    }
+}
+
+static void generateExpression( Expression * expression ){
+    switch (expression->type)
+    {
+    case TERM:
+        generateTerm(expression->term);
+        break;
+    case EADD:
+        generateExpression(expression->expression);
+        strcat(query_code, " + ");
+        generateTerm(expression->term);
+        break;
+    case ESUB:
+        generateExpression(expression->expression);
+        strcat(query_code, " - ");
+        generateTerm(expression->term);
+        break;
+    
+    default:
+        break;
+    }
+}
+
+static void generateCondition( Condition * condition ){
+    generateExpression(condition->leftExpression);
+    generateComparisson(condition->comparison);
+    generateExpression(condition->rightExpression);
+}
+
 char * generateQuery( QueryBody * queryBody ){
     query_code = malloc(CD_LEN);
     query_size = 1;
