@@ -260,7 +260,7 @@ char * generateCheck( Check * check ){
     strcat(check_code, "( ");
     
     generateCheckBody( check->checkBody );
-    strcat(check_code, " )");
+    strcat(check_code, " );");
 
     return check_code;
 }

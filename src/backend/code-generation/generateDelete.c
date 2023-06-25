@@ -105,5 +105,6 @@ char * generateDelete( DeleteBody * deleteBody ){
     default:
         break;
     }
+    strcat(delete_code,";");
     return delete_code;
 }
