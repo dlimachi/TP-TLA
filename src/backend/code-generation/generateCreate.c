@@ -10,7 +10,7 @@
 
 char key[TC_LEN];
 char currentEnum[TC_LEN];
-char enums[CD_LEN];
+char * enums;
 char * create_code;
 int create_size;
 static char create_tc_name[TC_LEN];
@@ -187,6 +187,7 @@ static void generateStatements( Statements * statements ){
 
 char * generateCreate( CreateBody * createBody ){
     create_code = malloc(CD_LEN);
+    enums = malloc(CD_LEN);
     create_size = 1;
     strcat(create_code,"CREATE TABLE ");
     strcpy(create_tc_name, createBody->createTable->tc_name);
@@ -199,5 +200,6 @@ char * generateCreate( CreateBody * createBody ){
     strcat(create_code, "\n);");
     strcat(enums, "\n\n");
     strcat(enums, create_code);
+    free(create_code);
     return enums;
 }
