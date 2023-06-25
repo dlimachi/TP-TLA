@@ -42,6 +42,7 @@
 	QueryBody *queryBody;
 	General *general;
 	Generals *generals;
+	Program * program;
 
 	
 
