@@ -245,8 +245,8 @@ check:
 
 check_body:
     condition														{ $$ = CheckConditionGrammarAction($1); }
-    | condition AND check_body												{ $$ = CheckAndGrammarAction($1, $3); }
-    | condition OR check_body												{ $$ = CheckOrGrammarAction($1, $3); }
+    | condition AND check_body												{ $$ = CheckAndGrammarAction($3, $1); }
+    | condition OR check_body												{ $$ = CheckOrGrammarAction($3, $1); }
     ;
 
 condition:
@@ -271,7 +271,7 @@ factor:
     | STRING														{ $$ = StringFactorGrammarAction($1); }
     ;
 
-comparison: GT 
+comparison: GT 													{ $$ = GreaterConstantGrammarAction(); }
 	| LT 														{ $$ = LesserConstantGrammarAction(); }
 	| EQ 														{ $$ = EqualConstantGrammarAction(); }
 	| GTEQ 														{ $$ = GreaterOrEqualConstantGrammarAction(); }

@@ -678,6 +678,13 @@ Factor * StringFactorGrammarAction(char * data) {
 	return factor;
 }
 
+Comparison * GreaterConstantGrammarAction() {
+	LogDebug("\tLesserConstantGrammarAction");
+	Comparison * comp = calloc(1,sizeof(Comparison));
+	comp->type = CGT;
+	return comp;
+}
+
 Comparison * LesserConstantGrammarAction() {
 	LogDebug("\tLesserConstantGrammarAction");
 	Comparison * comp = calloc(1,sizeof(Comparison));
