@@ -27,8 +27,9 @@ void yyerror(const char * string) {
 * indica que efectivamente el programa de entrada se pudo generar con esta
 * gramática, o lo que es lo mismo, que el programa pertenece al lenguaje.
 */
-Program * GeneralGrammarAction(General * value) {
-	LogDebug("\tGeneralGrammarAction(%d)", value);
+Program * ProgramGrammarAction(Generals * generals) {
+	LogInfo("PROGRAM");
+	LogDebug("\tGeneralGrammarAction(%d)", generals);
 	/*
 	* "state" es una variable global que almacena el estado del compilador,
 	* cuyo campo "succeed" indica si la compilación fue o no exitosa, la cual
@@ -44,10 +45,30 @@ Program * GeneralGrammarAction(General * value) {
 	*/
 
 	Program * program = malloc(sizeof(Program));
-	program->general = value;
+	program->generals = generals;
 
 	state.program = program;
 	return program;
+}
+
+Generals * GeneralGrammarAction( General * general ){
+	LogInfo("GENERALS SIMPLE");
+	LogDebug("\tGeneralGrammarAction");
+	Generals * toReturn = calloc(1, sizeof(Generals));
+	toReturn->type = SINGLE;
+	toReturn->general = general;
+	toReturn->generals = NULL;
+	return toReturn;
+}
+
+Generals * GeneralMultipleGrammarAction( General * general , Generals * generals){
+	LogInfo("GENERALS MULTIPLE");
+	LogDebug("\tGeneralGrammarAction");
+	Generals * toReturn = calloc(1, sizeof(Generals));
+	toReturn->type = MULTIPLE;
+	toReturn->general = general;
+	toReturn->generals = generals;
+	return toReturn;
 }
 
 int return0() {

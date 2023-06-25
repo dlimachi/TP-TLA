@@ -41,7 +41,7 @@
 	Check *check;
 	QueryBody *queryBody;
 	General *general;
-	General *program;
+	Generals *generals;
 
 	
 
@@ -139,13 +139,18 @@
 %type <check> check
 %type <queryBody> query_body
 %type <general> general
+%type <generals> generals
 
 
 // El símbolo inicial de la gramatica.
 %start program
 
 %%
-program: general 													{ $$ = GeneralGrammarAction($1); }
+program: generals														{ $$ = ProgramGrammarAction($1);}
+	;
+
+generals: general														{ $$ = GeneralGrammarAction($1); }
+	| general generals													{ $$ = GeneralMultipleGrammarAction($1,$2);}
 	;
 
 general: insert_body													{ $$ = GeneralInsertBodyGrammarAction($1); }

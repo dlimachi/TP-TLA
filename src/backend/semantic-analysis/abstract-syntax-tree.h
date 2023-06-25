@@ -31,6 +31,7 @@ typedef struct DeleteBody DeleteBody;
 typedef struct Check Check;
 typedef struct QueryBody QueryBody;
 typedef struct General General;
+typedef struct Generals Generals;
 	
 
 //enums a utilizar
@@ -279,8 +280,14 @@ struct General {
 	QueryBody * queryBody;
 };
 
-typedef struct {
+struct Generals{
+	MultiplesType type;
 	General * general;
+	struct Generals * generals;
+};
+
+typedef struct {
+	Generals * generals;
 } Program;
 
 

@@ -17,27 +17,48 @@ void Generator(Program * program) {
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
-	char * codeFinal = NULL;
+	char * codeFinal = malloc(sizeof(CD_LEN));
+	codeFinal[0] = 0;
+	char * codeAux = NULL;
 
-	switch (program->general->type) {
+	Generals * toProcess = program->generals;
+
+	while( toProcess != NULL ){
+		switch (toProcess->general->type) {
         case(GINSERT):
-            codeFinal = generateInsert(program->general->insertBody);
+            codeAux = generateInsert(toProcess->general->insertBody);
             break;
         case(GDELETE):
-            codeFinal = generateDelete(program->general->deleteBody);
+            codeAux = generateDelete(toProcess->general->deleteBody);
             break;
         case(GQUERY):
-            codeFinal = generateQuery(program->general->queryBody);
+            codeAux = generateQuery(toProcess->general->queryBody);
             break;
         case(GCREATE):
-            codeFinal = generateCreate(program->general->createBody);
+            codeAux = generateCreate(toProcess->general->createBody);
             break;
         case(GCHECK):
 			LogInfo("apunto de hacer un check!");
-            codeFinal = generateCheck(program->general->check);
+            codeAux = generateCheck(toProcess->general->check);
             break;
 	    default:
 		    break;
+
+		}
+
+		size_t len = strlen(codeAux);
+		size_t cur_len = strlen(codeFinal);
+
+		codeFinal = realloc(codeFinal, cur_len + len + LEN);
+
+		strcat(codeFinal,"\n");
+		strcat(codeFinal,codeAux);
+
+		if ( toProcess->type == MULTIPLE )
+			toProcess = toProcess->generals;
+		else
+			break;
+		
 	}
 
 	printf(codeFinal);
