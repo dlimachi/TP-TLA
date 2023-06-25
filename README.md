@@ -42,11 +42,9 @@ Luego se deberá abrir la solución generada `bin\Compiler.sln` con el IDE _Micr
 
 ## **Introducción**
 
-El objetivo principal del proyecto es desarrollar un lenguaje que permita generar un archivo .sql a partir de un program.
+El objetivo principal del proyecto es desarrollar un lenguaje que permita generar un archivo .sql a partir de un archivo.
 
-Nuestro lenguaje permite crear 5 tipos de consultas: intert into, delete, create, check y query, los cuales son muy conocidos en el lenguaje sql.
-
-Con este programa buscamos solucionar el problema de la dificultad que puede llegar a ser para algunas personas crear estas consultas, facilitandoles usando la misma.
+Nuestro lenguaje permite crear 5 tipos de consultas: intert into, delete, create, check y query, los cuales son muy conocidos en el lenguaje sql.Con este programa buscamos solucionar el problema de la dificultad que puede llegar a ser para algunas personas crear estas consultas, facilitandoles usando la misma.
 
 
 
@@ -89,6 +87,8 @@ Para la segunda entrega se decidió utilizar distintos generadores de código po
 En esta entrega, tuvimos que tambien realizar cambios de la entrega pasada, ya que encontrabamos ambigüedades en la gramatica, lo cual complicaba el recorrido del árbol, esto nos ayudo a poder avanzar en los generadores.
 
 - Podemos preguntarnos por que tantos generadores, esta decisión se tomo por el formato de árbol que tomamos, como cada consulta tiene mas de una producción seria muy util poder recorrer de forma recursiva al mismo, buscando las producciones correspondientes de cada consulta.
+- Para la generacion del codigo a partir de cada tipo de consulta, los generadores especificos crean y editan su propia cadena de codigo, con sus propias alocaciones de memoria las cuales son concatenadas y liberadas por el generador principal del programa.
+
 ## Uso del programa
 
 Para utilizar el programa de debe correr dependiendo el SO utilizado:
@@ -103,7 +103,7 @@ Windows:
 .\script\start.bat <program>
 ```
 
-Abrir el archivo .txt ubicado en la carpeta donde se corrió el programa.
+Abrir el archivo .sql ubicado en la carpeta donde se corrió el programa.
 
 ## Dificultades encontradas:
 
@@ -111,12 +111,14 @@ En un primer lugar, surgieron dificultades a la hora de elegir una gramática pa
 
 A la hora de avanzar en el proyecto, tuvimos una dificultad a la hora de concatenar consultas, al inicio al proponer la idea lo vimos como algo bueno e importante a la hora de ayudar a gente que quizá no entienda como creas consultas. Pero desde el lado de frontend y backend fue mas difícil cumplir el requisito, de todas formas superamos el desafio cumpliendo el requerimiento.
 
+Gracias a la implementacion de un arbol sintactico muy robusto, la escritura de codigo para los generadores de los distintos tipos de consulta fue mas simple. La decision de temprana de incluir ENUMS para las distintas variedades/tipos de cada nodo ahorro la necesidad de crear logica compleja en los generadores.
+
 ## Futuras extensiones
 
 Algunas posibles extensiones que nos propusimos son las siguientes:
 
 - Aceptar consultas con UNION e INNER JOIN en este proyecto lo descartamos por la complejidad que previmos del mismo, como no guardamos los datos de 2 tablas para unir, no seria posible realizarlo, una posible solución podría ser que concatenemos las consultas de CREATE con estas mismas.
-- Aceptar consultas con Group By, como mencionamos anteriormente, descartamos la idea también por los tiempos que veiamos que tendriamos, quiza esta idea sea menos compleja que la mencionada anteriormente.
+- Aceptar consultas con Group By, como mencionamos anteriormente, descartamos la idea también por los tiempos que veiamos que tendríamos, quiza esta idea sea menos compleja que la mencionada anteriormente.
 
 ## Conclusión
 
