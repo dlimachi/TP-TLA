@@ -103,7 +103,6 @@ void generateWithVarType(char * columnName,  char * varType ){
 }
 
 static void generateColumn(Column * column, char * varType ){
-    LogDebug("puta madre %s", create_code);
     strcat(create_code,column->tc_name);
     strcat(create_code, " ");
     stringToUpper(varType);
@@ -186,8 +185,8 @@ static void generateStatements( Statements * statements ){
 }
 
 char * generateCreate( CreateBody * createBody ){
-    create_code = malloc(CD_LEN);
-    enums = malloc(CD_LEN);
+    create_code = calloc(1,CD_LEN);
+    enums = calloc(1,CD_LEN);
     create_size = 1;
     strcat(create_code,"CREATE TABLE ");
     strcpy(create_tc_name, createBody->createTable->tc_name);

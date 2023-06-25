@@ -244,7 +244,7 @@ static void generateCheckBody( CheckBody * checkBody ){
 
 char * generateCheck( Check * check ){
     
-    check_code = malloc(CD_LEN);
+    check_code = calloc(1,CD_LEN);
     check_size = 1;
     check_code[0] = 0;
     check_code[CD_LEN]=0;

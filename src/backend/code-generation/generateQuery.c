@@ -188,7 +188,7 @@ static void generateCheckBody( CheckBody * checkBody ){
 }
 
 char * generateQuery( QueryBody * queryBody ){
-    query_code = malloc(CD_LEN);
+    query_code = calloc(1,CD_LEN);
     query_size = 1;
     query_code[0] = 0;
     int query_progress = 0;

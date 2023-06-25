@@ -13,11 +13,10 @@
 void Generator(Program * program) {
 	// Generator va a generar un archivo .sql
 	// nombre del archivo harcodeado
-	LogInfo("El resultado de la expresion computada es: '%d'.", program);
 
 	//recorro el arbol desde program y formo el correcto codigo sql
 	//casos por tipo de general
-	char * codeFinal = malloc(sizeof(CD_LEN));
+	char * codeFinal = calloc(1,sizeof(CD_LEN));
 	codeFinal[0] = 0;
 	char * codeAux = NULL;
 
@@ -38,7 +37,6 @@ void Generator(Program * program) {
             codeAux = generateCreate(toProcess->general->createBody);
             break;
         case(GCHECK):
-			LogInfo("apunto de hacer un check!");
             codeAux = generateCheck(toProcess->general->check);
             break;
 	    default:
@@ -49,7 +47,7 @@ void Generator(Program * program) {
 		size_t len = strlen(codeAux);
 		size_t cur_len = strlen(codeFinal);
 
-		codeFinal = realloc(codeFinal, cur_len + len + LEN);
+		codeFinal = realloc(codeFinal, cur_len + len);
 
 		strcat(codeFinal,"\n");
 		strcat(codeFinal,codeAux);

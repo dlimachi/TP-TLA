@@ -89,7 +89,7 @@ static void generateObjectDelete( Object * object ){
 }
 
 char * generateDelete( DeleteBody * deleteBody ){
-    delete_code = malloc(CD_LEN);
+    delete_code = calloc(1,CD_LEN);
     delete_size = 1;
     strcpy(delete_tc_name, deleteBody->tc_name);
     switch (deleteBody->type)
