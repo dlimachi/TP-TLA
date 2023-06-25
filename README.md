@@ -60,6 +60,8 @@ Como se menciono en la corrección de la primera entrega, teníamos algunos toke
 
 La primer entrega consistió en la creación de la gramática y el uso de las herramientas Flex y Bison para que un texto de entrada pueda ser tokenizado y se pueda saber si pertenece o no al lenguaje generado por nuestra gramática.
 
+Durante la entrega de la idea del proyecto y la entrega del frontend, se realizaron cambios de como se realiza una query, ya que la misma se veia confusa y disminua la usabilidad del proyecto.
+
 Se demostró el mismo con trece tests, en los cuales vimos como se acepto y rechazo correctamente las gramáticas. Los mismos podrán ser encontrados  en la carpeta ‘test’ para poder probar el lenguaje creado.v
 
 La cadena de pasos seguida por el Frontend fue:
@@ -84,8 +86,9 @@ Windows:
 
 Para la segunda entrega se decidió utilizar distintos generadores de código por cada tipo de consulta, por lo cual se decidirá el uso del mismo en el generador principal.
 
-- Podemos preguntarnos por que tantos generadores, esta decisión se tomo por el formato de árbol que tomamos, como cada consulta tiene mas de una producción seria muy util poder recorrer de forma recursiva al mismo, buscando las producciones correspondientes de cada consulta.
+En esta entrega, tuvimos que tambien realizar cambios de la entrega pasada, ya que encontrabamos ambigüedades en la gramatica, lo cual complicaba el recorrido del árbol, esto nos ayudo a poder avanzar en los generadores.
 
+- Podemos preguntarnos por que tantos generadores, esta decisión se tomo por el formato de árbol que tomamos, como cada consulta tiene mas de una producción seria muy util poder recorrer de forma recursiva al mismo, buscando las producciones correspondientes de cada consulta.
 ## Uso del programa
 
 Para utilizar el programa de debe correr dependiendo el SO utilizado:
